@@ -61,9 +61,9 @@
   footer a { color: var(--dim); }
   a { color: var(--accent); }
   .shot { margin: 0 0 8px; }
-  .shot img {
+  .shot img, .shot video {
     width: 100%; height: auto; display: block; border-radius: 14px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line); background: #0a0a0c;
   }
   .shot figcaption {
     color: var(--faint); font-size: 13.5px; text-align: center; margin-top: 12px;
@@ -85,8 +85,16 @@
 </header>
 
 <figure class="shot">
-  <img src="hero.png" alt="A permission request from Claude Code shown at the top of the screen: Website · Bash requesting permission, the command npm run build &amp;&amp; npm test, and Deny / Allow buttons with a countdown.">
+  <!-- A real recording of the running app, not an animation: the card arrives,
+       the countdown runs while the CLI waits, and nothing else moves. Poster
+       frame is a still from the same clip, so the layout never shifts. -->
+  <video src="demo.mp4" poster="demo-poster.png" autoplay muted loop playsinline
+         aria-label="A permission request appearing at the top of the screen while Claude Code waits."></video>
   <figcaption>A real permission request, answered without leaving what you were doing.</figcaption>
+</figure>
+
+<figure class="shot" style="margin-top:28px">
+  <img src="hero.png" alt="The permission card in place at the top of the screen, showing the project, the command npm run build &amp;&amp; npm test, and Deny / Allow buttons with a countdown.">
 </figure>
 
 <section>
