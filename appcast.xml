@@ -8,6 +8,16 @@
          <item> block for each notarized DMG. Empty until the first release:
          Sparkle treats an empty channel as "you are up to date". -->
     <item>
+      <title>8.0.2</title>
+      <pubDate>Fri, 21 Aug 2026 16:25:31 GMT</pubDate>
+      <sparkle:version>8.0.2</sparkle:version>
+      <sparkle:shortVersionString>8.0.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Pro can now switch the sponsor slot on to earn credit against its own subscription. It stays off until you do.</p>]]></description>
+      <enclosure url="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.0.2/AgentIsland-8.0.2.dmg"
+                 type="application/octet-stream" sparkle:edSignature="W1NVMmQbNKhaZFQSlSV6vUY+/dOMQVJg6Ltw+qIiHHfm0nkU94d8lKKDXkDSQNF3iMQwb7FARyjJapUieMpmCw==" length="5406128" />
+    </item>
+    <item>
       <title>8.0.1</title>
       <pubDate>Fri, 21 Aug 2026 16:05:55 GMT</pubDate>
       <sparkle:version>8.0.1</sparkle:version>
