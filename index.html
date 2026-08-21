@@ -8,6 +8,8 @@
 <meta property="og:title" content="AgentIsland">
 <meta property="og:description" content="Answer your coding agents from the notch, instead of hunting for the right terminal tab.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://agentislandapp.github.io/hero.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="icon.png">
 <style>
   /* Self-contained on purpose: no fonts, analytics or scripts are fetched
@@ -58,6 +60,14 @@
   footer { padding: 40px 0 64px; border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
   footer a { color: var(--dim); }
   a { color: var(--accent); }
+  .shot { margin: 0 0 8px; }
+  .shot img {
+    width: 100%; height: auto; display: block; border-radius: 14px;
+    border: 1px solid var(--line);
+  }
+  .shot figcaption {
+    color: var(--faint); font-size: 13.5px; text-align: center; margin-top: 12px;
+  }
 </style>
 </head>
 <body>
@@ -73,6 +83,11 @@
   </div>
   <p class="meta">macOS 14+ · Apple silicon and Intel · works with or without a real notch</p>
 </header>
+
+<figure class="shot">
+  <img src="hero.png" alt="A permission request from Claude Code shown at the top of the screen: Website · Bash requesting permission, the command npm run build &amp;&amp; npm test, and Deny / Allow buttons with a countdown.">
+  <figcaption>A real permission request, answered without leaving what you were doing.</figcaption>
+</figure>
 
 <section>
   <h2>What it does</h2>
