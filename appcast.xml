@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+  <channel>
+    <title>AgentIsland</title>
+    <description>Updates for AgentIsland</description>
+    <language>en</language>
+    <!-- Entries are appended by Scripts/release.sh, which prints a signed
+         <item> block for each notarized DMG. Empty until the first release:
+         Sparkle treats an empty channel as "you are up to date". -->
+  </channel>
+</rss>

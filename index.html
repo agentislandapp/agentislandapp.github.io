@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentIsland — answer your coding agents from the notch</title>
+<meta name="description" content="When your coding agent asks permission, the request appears at the top of your screen. Answer it there and it carries on.">
+<meta property="og:title" content="AgentIsland">
+<meta property="og:description" content="Answer your coding agents from the notch, instead of hunting for the right terminal tab.">
+<meta property="og:type" content="website">
+<link rel="icon" href="icon.png">
+<style>
+  /* Self-contained on purpose: no fonts, analytics or scripts are fetched
+     from anywhere, so the site makes the same privacy claim the app does. */
+  :root {
+    --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
+    --text: #f5f5f7; --dim: rgba(245,245,247,.62); --faint: rgba(245,245,247,.38);
+    --accent: #e8825a; --green: #66bb6a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 88px 0 64px; text-align: center; }
+  header img { width: 104px; height: 104px; }
+  h1 { font-size: 40px; line-height: 1.15; margin: 24px 0 12px; letter-spacing: -.02em; }
+  .tagline { font-size: 19px; color: var(--dim); margin: 0 auto 32px; max-width: 34em; }
+  .cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 10px; text-decoration: none;
+    font-weight: 600; font-size: 15px; border: 1px solid transparent;
+  }
+  .btn.primary { background: var(--accent); color: #1a0d07; }
+  .btn.ghost { border-color: var(--line); color: var(--text); }
+  .meta { color: var(--faint); font-size: 13px; margin-top: 14px; }
+  section { padding: 40px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 22px; margin: 0 0 20px; letter-spacing: -.01em; }
+  .feature { margin-bottom: 22px; }
+  .feature h3 { font-size: 16px; margin: 0 0 4px; }
+  .feature p { margin: 0; color: var(--dim); font-size: 15px; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 520px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--faint); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
+  td.depth { white-space: nowrap; color: var(--dim); }
+  .tiers { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 640px) { .tiers { grid-template-columns: 1fr; } h1 { font-size: 32px; } }
+  .tier { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .tier h3 { margin: 0 0 2px; font-size: 17px; }
+  .price { color: var(--faint); font-size: 14px; margin-bottom: 14px; }
+  .tier ul { margin: 0; padding-left: 18px; color: var(--dim); font-size: 14.5px; }
+  .tier li { margin-bottom: 6px; }
+  .note { color: var(--faint); font-size: 14px; }
+  code { background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 5px; font-size: 13.5px; }
+  footer { padding: 40px 0 64px; border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
+  footer a { color: var(--dim); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <img src="icon.png" alt="AgentIsland">
+  <h1>Answer your coding agents<br>from the notch</h1>
+  <p class="tagline">When Claude Code stops and asks permission to run something, the request appears at the top of your screen. Answer it there and the agent carries on — no hunting for the right terminal tab.</p>
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/latest">Download for macOS</a>
+    <a class="btn ghost" href="#pricing">See pricing</a>
+  </div>
+  <p class="meta">macOS 14+ · Apple silicon and Intel · works with or without a real notch</p>
+</header>
+
+<section>
+  <h2>What it does</h2>
+  <div class="feature">
+    <h3>Answer permission prompts without switching apps</h3>
+    <p>The card shows the tool, the command, and a red/green diff for edits. Allow or deny with a click, or ⌥↩ and ⌥N from any app.</p>
+  </div>
+  <div class="feature">
+    <h3>See every session at a glance</h3>
+    <p>One dot per running session, tinted by which CLI it is, with a context-usage ring and a todo count. Nothing else, until something needs you.</p>
+  </div>
+  <div class="feature">
+    <h3>Reply from anywhere</h3>
+    <p>⌥Space opens a composer aimed at whichever session most needs you. Type or dictate; it is delivered through tmux, or typed into the terminal for you.</p>
+  </div>
+  <div class="feature">
+    <h3>Know what it costs</h3>
+    <p>Live model, context percentage and spend per session — and a history of what each project actually cost you this week.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Works with your CLI</h2>
+  <p class="note" style="margin-top:-8px;margin-bottom:18px">Depth differs per tool, so it is stated per tool. The app says the same thing in its own Settings rather than implying more than it does.</p>
+  <div class="scroll">
+  <table>
+    <tr><th>What you get</th><th>Tools</th></tr>
+    <tr><td class="depth">Permissions + status</td><td>Claude Code, Gemini CLI, Crush</td></tr>
+    <tr><td class="depth">Live session API</td><td>OpenCode (including OpenCode Zen)</td></tr>
+    <tr><td class="depth">Status events</td><td>Codex, Qwen Code, iFlow, Factory Droid, Kimi</td></tr>
+    <tr><td class="depth">Detected only</td><td>Cursor, Goose, Amp, Aider, Cline, DeepSeek (dsh)</td></tr>
+  </table>
+  </div>
+  <p class="note">GLM/Zhipu setups run the real <code>claude</code> binary, so they work through the Claude Code integration.</p>
+</section>
+
+<section>
+  <h2 id="pricing">Pricing</h2>
+  <div class="tiers">
+    <div class="tier">
+      <h3>Free</h3>
+      <div class="price">Always</div>
+      <ul>
+        <li>Permission, question and plan cards — unlimited</li>
+        <li>One session at a time</li>
+        <li>Claude Code</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <h3>Pro</h3>
+      <div class="price">$8/month · $69/year</div>
+      <ul>
+        <li>Every session at once</li>
+        <li>Pro cockpit (⌥P)</li>
+        <li>Usage history and cost per project</li>
+        <li>Voice messages</li>
+        <li>Every supported CLI</li>
+        <li>No sponsor slot, ever</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note" style="margin-top:18px"><strong>About the sponsor slot.</strong> On the free tier, a single sponsored line can appear beneath your sessions — never over a permission request, never while an agent is working, at most once every four hours, and never at all on Pro. When it appears, part of what the sponsor pays goes to you as credit against your own subscription. You can switch it off entirely in Settings, and switching it off does not take anything else away.</p>
+</section>
+
+<section>
+  <h2>Your machine stays yours</h2>
+  <p class="note">Everything runs locally. There is no account to create, and no telemetry unless you switch it on — in which case Settings prints the exact list of what would be sent, next to the switch. Prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere, under any setting.</p>
+  <p class="note">Every file the app writes to your home directory is named in the interface before you agree to it, backed up once before the first edit, and restored when you remove the integration — including your own <code>statusLine</code>.</p>
+</section>
+
+<footer>
+  <p><a href="privacy.html">Privacy</a> · <a href="eula.html">Licence agreement</a> · <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">Report an issue</a></p>
+  <p>Not affiliated with Anthropic, Google, OpenAI, Moonshot, Alibaba or Charm. Product names are their owners'.</p>
+</footer>
+
+</div>
+</body>
+</html>
