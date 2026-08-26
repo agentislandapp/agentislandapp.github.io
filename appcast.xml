@@ -8,6 +8,14 @@
          <item> block for each notarized DMG. Empty until the first release:
          Sparkle treats an empty channel as "you are up to date". -->
     <item>
+      <title>8.0.9</title>
+      <sparkle:version>8.0.9</sparkle:version>
+      <sparkle:shortVersionString>8.0.9</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure url="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.0.9/AgentIsland-8.0.9.dmg"
+                 type="application/octet-stream" sparkle:edSignature="dp1OQuYv8rfy3z4OU0By6ebNIapeGL974t0I5KTH931S9VsR70PFy7jA63LUgjOYPQC78S1I3v90SGrWIrSvBQ==" length="5553142" />
+    </item>
+    <item>
       <title>8.0.8</title>
       <sparkle:version>8.0.8</sparkle:version>
       <sparkle:shortVersionString>8.0.8</sparkle:shortVersionString>
