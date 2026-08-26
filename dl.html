@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>AgentIsland — download started</title>
+<!-- This page is never navigated to. index.html loads it in a hidden iframe the
+     moment a Download button is clicked, purely so the analytics beacon below
+     registers a page view for /dl.html. Cloudflare Web Analytics has no custom
+     events, and the Download buttons link straight at the DMG — a link to a
+     binary starts a transfer without navigating, so there is no page load to
+     count and nothing to hang an event on. This is the whole workaround.
+
+     Deliberately NOT an interstitial: the download must stay one click with no
+     redirect in the way. Anyone who reaches this URL by hand gets the line
+     below and a link, which is the honest thing to show.
+
+     Keep the beacon token here identical to the other pages. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
+<style>
+  body { margin: 0; background: #0a0a0c; color: rgba(245,245,247,.62);
+         font: 15px/1.6 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+         display: grid; place-items: center; min-height: 100vh; text-align: center; }
+  a { color: #e8825a; }
+</style>
+</head>
+<body>
+<p>Your download should already be running.<br><a href="index.html">← AgentIsland</a></p>
+</body>
+</html>

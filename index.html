@@ -251,5 +251,32 @@
 </footer>
 
 </div>
+<script>
+/* Counts Download clicks. The buttons are still direct links to the DMG, so a
+   click starts the file transfer and never navigates — which is also why there
+   is no page load to count, and why Cloudflare Web Analytics (no custom events)
+   cannot see the click on its own. So load dl.html in a hidden iframe: it
+   carries the same beacon and the click lands in the dashboard as a page view
+   of /dl.html, next to the real ones. Nothing here touches the download; if
+   this script throws or is blocked, the link works exactly as before. */
+(function () {
+  var counted = false;
+  document.addEventListener('click', function (e) {
+    if (counted || !e.target || !e.target.closest) return;
+    if (!e.target.closest('a[href*="/releases/download/"]')) return;
+    /* Once per visit on purpose: this answers "how many visitors started a
+       download", not "how many times a button was pressed", so a double click
+       or a second attempt after a failed transfer must not read as two people. */
+    counted = true;
+    var f = document.createElement('iframe');
+    f.src = 'dl.html';
+    f.setAttribute('aria-hidden', 'true');
+    f.setAttribute('tabindex', '-1');
+    f.style.cssText = 'position:absolute;left:-9999px;width:0;height:0;border:0';
+    document.body.appendChild(f);
+    setTimeout(function () { f.parentNode && f.parentNode.removeChild(f); }, 5000);
+  });
+})();
+</script>
 </body>
 </html>
