@@ -12,8 +12,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="icon.png">
 <style>
-  /* Self-contained on purpose: no fonts, analytics or scripts are fetched
-     from anywhere, so the site makes the same privacy claim the app does. */
+  /* Inline on purpose: no fonts, no frameworks, no trackers are fetched.
+     The site loads exactly one external script, Cloudflare Web Analytics,
+     which is cookieless and counts page views only — see privacy.html. */
   :root {
     --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
     --text: #f5f5f7; --dim: rgba(245,245,247,.62); --faint: rgba(245,245,247,.38);
@@ -79,6 +80,12 @@
     color: var(--faint); font-size: 13.5px; text-align: center; margin-top: 12px;
   }
 </style>
+<!-- Cloudflare Web Analytics. Cookieless: no cookie is set, no visitor
+     identifier is stored, nothing is shared with an ad network. It answers one
+     question the GitHub release download counter cannot — how many people saw
+     the page. Declared in privacy.html; keep the two in step. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
 </head>
 <body>
 <div class="wrap">
@@ -233,7 +240,7 @@
 
 <section>
   <h2>Your machine stays yours</h2>
-  <p class="note">Everything runs locally. There is no account to create, and no telemetry unless you switch it on — in which case Settings prints the exact list of what would be sent, next to the switch. Prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere, under any setting.</p>
+  <p class="note">Everything runs locally. There is no account to create, and no telemetry unless you switch it on — in which case Settings prints the exact list of what would be sent, next to the switch. Prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere, under any setting. That is the app. This website counts page views with Cloudflare Web Analytics, which sets no cookie and cannot tell who you are; <a href="privacy.html">the privacy page</a> lists exactly what it records.</p>
   <p class="note">Every file the app writes to your home directory is named in the interface before you agree to it, backed up once before the first edit, and restored when you remove the integration — including your own <code>statusLine</code>.</p>
 </section>
 

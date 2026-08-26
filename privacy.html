@@ -6,8 +6,9 @@
 <title>Privacy — AgentIsland</title>
 <link rel="icon" href="icon.png">
 <style>
-  /* Self-contained on purpose: no fonts, analytics or scripts are fetched
-     from anywhere, so the site makes the same privacy claim the app does. */
+  /* Inline on purpose: no fonts, no frameworks, no trackers are fetched.
+     The site loads exactly one external script, Cloudflare Web Analytics,
+     which is cookieless and counts page views only — see privacy.html. */
   :root {
     --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
     --text: #f5f5f7; --dim: rgba(245,245,247,.62); --faint: rgba(245,245,247,.38);
@@ -62,13 +63,19 @@
   p, li { color: var(--dim); font-size: 15.5px; }
   .updated { color: var(--faint); font-size: 14px; margin-bottom: 8px; }
 </style>
+<!-- Cloudflare Web Analytics. Cookieless: no cookie is set, no visitor
+     identifier is stored, nothing is shared with an ad network. It answers one
+     question the GitHub release download counter cannot — how many people saw
+     the page. Declared in privacy.html; keep the two in step. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
 </head>
 <body>
 <div class="wrap">
 <h1>Privacy</h1>
-<p class="updated">Last updated 21 August 2026</p>
+<p class="updated">Last updated 26 August 2026</p>
 
-<p>AgentIsland runs entirely on your Mac. There is no account, no sign-in, and no server that sees your work.</p>
+<p>AgentIsland runs entirely on your Mac. There is no account, no sign-in, and no server that sees your work. This page covers both the app and this website; where they differ, it says so.</p>
 
 <h2>What never leaves your machine</h2>
 <p>Your prompts, the commands your agents run, tool inputs, file contents and diffs, repository paths, session transcripts, and the names of your projects. None of these are transmitted anywhere, under any setting, ever. The app reads them locally to draw its own interface and for nothing else.</p>
@@ -86,6 +93,11 @@
 
 <h2>Files the app writes</h2>
 <p>Hook configuration in the CLIs you connect, and its own scripts, logs and settings in <code>~/Library/Application Support/AgentIsland</code>. Every configuration file is named in the interface before you agree to it, backed up before the first edit, and restored when you disconnect.</p>
+
+<h2>This website</h2>
+<p>The site counts page views using <a href="https://www.cloudflare.com/web-analytics/">Cloudflare Web Analytics</a>. It sets no cookie, stores no identifier in your browser, and builds no profile that follows you to other sites. What it records is the page you looked at, the referring site, and coarse device and country information derived from the request — the same things any web server writes to a log. It is not linked to your licence, and it cannot be, because the site never knows who you are.</p>
+<p>We use it to answer one question: how many people read the page compared with how many download the app. If you block it, the site works exactly the same.</p>
+<p>The site is hosted on GitHub Pages and the app is downloaded from GitHub Releases; both are operated by GitHub, whose own logs may record your IP address, as they would for any download.</p>
 
 <h2>Contact</h2>
 <p>Questions or a deletion request: write to <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>, or open an issue at <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">the issue tracker</a> if it does not need to be private.</p>

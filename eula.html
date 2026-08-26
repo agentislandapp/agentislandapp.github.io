@@ -6,8 +6,9 @@
 <title>Licence agreement — AgentIsland</title>
 <link rel="icon" href="icon.png">
 <style>
-  /* Self-contained on purpose: no fonts, analytics or scripts are fetched
-     from anywhere, so the site makes the same privacy claim the app does. */
+  /* Inline on purpose: no fonts, no frameworks, no trackers are fetched.
+     The site loads exactly one external script, Cloudflare Web Analytics,
+     which is cookieless and counts page views only — see privacy.html. */
   :root {
     --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
     --text: #f5f5f7; --dim: rgba(245,245,247,.62); --faint: rgba(245,245,247,.38);
@@ -62,6 +63,12 @@
   p, li { color: var(--dim); font-size: 15.5px; }
   .updated { color: var(--faint); font-size: 14px; margin-bottom: 8px; }
 </style>
+<!-- Cloudflare Web Analytics. Cookieless: no cookie is set, no visitor
+     identifier is stored, nothing is shared with an ad network. It answers one
+     question the GitHub release download counter cannot — how many people saw
+     the page. Declared in privacy.html; keep the two in step. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
 </head>
 <body>
 <div class="wrap">
