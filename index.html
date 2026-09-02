@@ -10,7 +10,34 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://agentislandapp.github.io/hero.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://agentislandapp.github.io/">
 <link rel="icon" href="icon.png">
+<!-- Structured data, inline like everything else here — nothing is fetched for
+     it. It exists because the people who would want this app are searching for
+     the problem ("claude code waiting for permission"), not for the product
+     name, and search engines will not infer price, platform or category from
+     prose. Keep the price and the macOS floor in step with the pricing section
+     below; a schema that disagrees with the page is worse than none. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AgentIsland",
+  "url": "https://agentislandapp.github.io/",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "macOS 14.0 or later",
+  "description": "A macOS menu bar app that surfaces AI coding agents' permission prompts in the notch, so you answer them without switching to the right terminal window. Works with Claude Code, Gemini CLI, OpenCode and others.",
+  "softwareVersion": "8.0.9",
+  "downloadUrl": "https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.0.9/AgentIsland-8.0.9.dmg",
+  "screenshot": "https://agentislandapp.github.io/hero.png",
+  "author": { "@type": "Organization", "name": "Tiki Studios" },
+  "offers": [
+    { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+    { "@type": "Offer", "name": "Pro — Monthly", "price": "8", "priceCurrency": "USD" },
+    { "@type": "Offer", "name": "Pro — Yearly", "price": "69", "priceCurrency": "USD" }
+  ]
+}
+</script>
 <style>
   /* Inline on purpose: no fonts, no frameworks, no trackers are fetched.
      The site loads exactly one external script, Cloudflare Web Analytics,
@@ -248,6 +275,33 @@
   <h2>Your machine stays yours</h2>
   <p class="note">Everything runs locally. There is no account to create, and no telemetry unless you switch it on — in which case Settings prints the exact list of what would be sent, next to the switch. Prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere, under any setting. That is the app. This website counts page views with Cloudflare Web Analytics, which sets no cookie and cannot tell who you are; <a href="privacy.html">the privacy page</a> lists exactly what it records.</p>
   <p class="note">Every file the app writes to your home directory is named in the interface before you agree to it, backed up once before the first edit, and restored when you remove the integration — including your own <code>statusLine</code>.</p>
+</section>
+
+<!-- These are the questions people actually type before they know this app
+     exists, which is why they are phrased as questions rather than as feature
+     headings. Every answer is one someone would want even if they never
+     searched for it — a FAQ written for a crawler and useless to a reader is
+     the version that ages badly. -->
+<section>
+  <h2>Questions</h2>
+
+  <h3>How do I know when Claude Code is waiting for me?</h3>
+  <p class="note">That is the whole point of this app. Claude Code stops on a permission request and waits silently, which you often notice minutes later. AgentIsland puts the request at the top of your screen the moment it fires, with a counter showing how long the CLI has been blocked.</p>
+
+  <h3>Can I answer a permission prompt without switching windows?</h3>
+  <p class="note">Yes. The card carries the command and Deny/Allow, so you answer from whatever app you are in and the agent carries on. ⌥↩ allows and ⌥N denies from the keyboard, anywhere.</p>
+
+  <h3>Does it work on a Mac without a notch?</h3>
+  <p class="note">Yes. On a Mac or an external display without a physical notch the app draws its own island in the same place, so it behaves identically.</p>
+
+  <h3>Which coding agents does it work with?</h3>
+  <p class="note">Claude Code, Gemini CLI and Crush get full permission cards; OpenCode is read through its live session API; Codex, Qwen Code, iFlow, Factory Droid and Kimi report status events; a few more are detected only. The table above states the depth per tool rather than implying more.</p>
+
+  <h3>Is it free?</h3>
+  <p class="note">The free tier is not a trial. Permission, question and plan cards are unlimited on it, for one Claude Code session at a time. Pro is $8 a month or $69 a year and adds every session at once, the keyboard cockpit, cost history and the other CLIs.</p>
+
+  <h3>Does it send my prompts or code anywhere?</h3>
+  <p class="note">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</p>
 </section>
 
 <footer>
