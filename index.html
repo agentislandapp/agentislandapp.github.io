@@ -33,8 +33,7 @@
   "author": { "@type": "Organization", "name": "Tiki Studios" },
   "offers": [
     { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-    { "@type": "Offer", "name": "Pro — Monthly", "price": "8", "priceCurrency": "USD" },
-    { "@type": "Offer", "name": "Pro — Yearly", "price": "69", "priceCurrency": "USD" }
+    { "@type": "Offer", "name": "Pro — one-time", "price": "49", "priceCurrency": "USD" }
   ]
 }
 </script>
@@ -81,6 +80,11 @@
   .tier { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
   .tier h3 { margin: 0 0 2px; font-size: 17px; }
   .price { color: var(--faint); font-size: 14px; margin-bottom: 14px; }
+  .free-line { color: var(--green); font-weight: 600; }
+  /* The free tier is the strongest thing on this page, so its card is the one
+     that gets the accent border — the paid card is not the default answer. */
+  .tier.free { border-color: rgba(102,187,106,.42); }
+  .tier.free .price { color: var(--green); font-weight: 600; font-size: 15px; }
   .tier ul { margin: 0; padding-left: 18px; color: var(--dim); font-size: 14.5px; }
   .tier li { margin-bottom: 6px; }
   .note { color: var(--faint); font-size: 14px; }
@@ -127,6 +131,10 @@
   </div>
   <p class="meta">macOS 14+ · Apple silicon and Intel · works with or without a real notch</p>
   <p class="meta">or <code>brew install --cask agentislandapp/tap/agentisland</code></p>
+  <!-- Stated this high on the page because it is the objection that stops
+       people before any feature does: whether the free tier is a countdown.
+       It is not one, and saying so is worth more than shaving the price. -->
+  <p class="meta free-line">Free forever, not a trial &mdash; no time limit, no card, no account.</p>
 </header>
 
 <figure class="shot">
@@ -147,12 +155,12 @@
      business" before ever seeing what the app does. Proof first, then the
      money question. -->
 <div class="hook">
-  <strong>And a Pro licence that can pay for itself.</strong> We are building an ad
-  business into this app on purpose, and it runs the opposite way round to every
-  other one: the free tier is never shown a sponsor at all, and on Pro you can
-  switch one on and be paid for it &mdash; the sponsor's money comes back as credit
-  against your own subscription, up to $8 a month, which is the whole bill.
-  <div class="meta">Nothing runs today. Off by default on Pro, and it starts once there are enough users for a sponsor to buy.</div>
+  <strong>Free, paid for by one sponsored line. Or $49 once, and never see one.</strong>
+  The free tier is not a trial and does not expire &mdash; it is funded by a single
+  sponsored line that appears only when nothing is running and nothing is waiting on
+  you, at most once every four hours. Buying Pro turns that off for good and unlocks
+  every session at once, the cockpit and the other CLIs. One payment, no subscription.
+  <div class="meta">No sponsor runs today. The switch and the machinery exist; it starts once enough people use the app for a sponsor to buy the slot.</div>
 </div>
 
 <section>
@@ -211,26 +219,29 @@
 <section>
   <h2 id="pricing">Pricing</h2>
   <div class="tiers">
-    <div class="tier">
+    <div class="tier free">
       <h3>Free</h3>
-      <div class="price">Always</div>
+      <div class="price">$0 — forever, not a trial</div>
       <ul>
-        <li>Permission, question and plan cards — unlimited</li>
+        <li><strong>Permission, question and plan cards — unlimited.</strong> No daily cap, no countdown, no card on file</li>
         <li>One session at a time</li>
         <li>Claude Code</li>
+        <li>Sponsored by one occasional line, which is what pays for it</li>
       </ul>
+      <p class="note" style="margin-top:12px">The part that saves you the context switch is not the paid part. If one session is all you run, you are done here &mdash; nothing expires and nothing starts asking.</p>
       <a class="btn ghost" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.0.9/AgentIsland-8.0.9.dmg">Download</a>
     </div>
     <div class="tier">
       <h3>Pro</h3>
-      <div class="price">$8/month · $69/year</div>
+      <div class="price">$49 once — no subscription</div>
       <ul>
+        <li>For running several agents at once &mdash; everything below is about that</li>
         <li>Every session at once</li>
         <li>The cockpit (⌥P) — every session on one screen, answered from the keyboard</li>
         <li>Usage history and cost per project</li>
         <li>Voice messages</li>
         <li>Every supported CLI</li>
-        <li>Sponsors pay <em>you</em>: switch the slot on and the credit comes off your bill, up to $8 a month</li>
+        <li>Turns sponsors off, for good</li>
       </ul>
       <a class="btn primary" href="https://buy.polar.sh/polar_cl_zCyTuukP3KUsKxvVtbd5gGF0OYiKOyY5764sC3DrdRM">Buy Pro</a>
     </div>
@@ -239,31 +250,28 @@
 </section>
 
 <section>
-  <h2>The plan: an ad business that pays the user</h2>
-  <p class="note">Every app this size eventually has to answer where the money comes from. Ours is
-  written down here before it starts, because a plan you only learn about on the day it ships is
-  not a plan, it is a surprise.</p>
+  <h2>Where the money comes from</h2>
+  <p class="note">Every app this size eventually has to answer this, and a plan you only learn about
+  on the day it ships is not a plan, it is a surprise. So: two lines, and no third one.</p>
+  <p class="note" style="margin-top:12px"><strong>One payment, or one sponsored line.</strong>
+  Pro is $49 once &mdash; not a subscription, not a renewal, not a licence that stops working next
+  year. The free tier is paid for the other way: an occasional sponsored line, from a named sponsor
+  who bought the slot directly. That is the whole business. There is no third revenue line hiding
+  in the app, and there is nothing to sell about you, because nothing about you leaves the machine.</p>
   <p class="note" style="margin-top:12px"><strong>Nothing is running yet.</strong> There is no
   advertising in AgentIsland today and nothing has been shown to anyone. What exists already is the
   machinery and the switch. <strong>We are going to run it</strong> &mdash; a stated intention, not
   a maybe &mdash; once there are enough people using the app for a sponsor's money to be worth
   asking for.</p>
-  <p class="note" style="margin-top:12px"><strong>The free tier is not the product being sold.</strong>
-  A free install will never be shown a sponsor: not on by default, not switchable on, not later. The
-  slot only exists to pay the person looking at it, that payment is credit against a subscription,
-  and a free install has no subscription to credit. Showing one there would be an advertisement
-  nobody could be paid for, which is the one thing this was designed not to be. The free tier is
-  not funded by anything and not sold to anyone: it earns the person using it nothing, and it earns
-  us nothing either. It is simply free.</p>
-  <p class="note" style="margin-top:12px"><strong>Where the money actually comes from,</strong> so
-  you can check it against what the app does: Pro subscriptions, and our share of the sponsorships
-  Pro customers choose to switch on. Two lines, both of them attached to someone who decided to pay
-  or decided to be paid.</p>
-  <p class="note" style="margin-top:12px"><strong>On Pro it is off, and it pays you.</strong> Buy Pro,
-  change nothing, and you will never see a sponsor either. Switch the slot on and part of what the
-  sponsor pays for your attention comes back as credit against your own subscription &mdash; capped
-  at $8 a month, which is the whole of it. A month where the slot carries its weight is a month you
-  do not pay for.</p>
+  <p class="note" style="margin-top:12px"><strong>Buying the app turns them off.</strong> That is
+  what the $49 buys, alongside the features: a switch in Settings that ends sponsors for good, with
+  no reminders afterwards. On the free tier there is no such switch, and saying so plainly is
+  better than a greyed-out control that looks broken.</p>
+  <p class="note" style="margin-top:12px"><strong>Nobody is paid to look at them.</strong> An earlier
+  version of this page promised the opposite &mdash; that sponsor money would come back to you as
+  credit. It was built and then removed, because paying people per impression is what ad networks
+  call invalid traffic, and a business that has to police its own users for fraud is a worse deal
+  for everyone than a cheaper app. So the slot earns you nothing, and it is honest about that.</p>
   <p class="note" style="margin-top:12px"><strong>And it stays out of the way.</strong> One sponsored
   line beneath your own sessions. Never over a permission request, never while an agent is working,
   at most once every four hours, and dismissing one buys a full day of quiet. If it could appear in
@@ -298,7 +306,7 @@
   <p class="note">Claude Code, Gemini CLI and Crush get full permission cards; OpenCode is read through its live session API; Codex, Qwen Code, iFlow, Factory Droid and Kimi report status events; a few more are detected only. The table above states the depth per tool rather than implying more.</p>
 
   <h3>Is it free?</h3>
-  <p class="note">The free tier is not a trial. Permission, question and plan cards are unlimited on it, for one Claude Code session at a time. Pro is $8 a month or $69 a year and adds every session at once, the keyboard cockpit, cost history and the other CLIs.</p>
+  <p class="note">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, for one Claude Code session at a time, for as long as you use it. Pro is $49 once &mdash; no subscription &mdash; and adds every session at once, the keyboard cockpit, cost history and the other CLIs, and turns off the sponsored line that pays for the free tier. It is for people running several agents in parallel, not a gate on the basic thing.</p>
 
   <h3>Does it send my prompts or code anywhere?</h3>
   <p class="note">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</p>
