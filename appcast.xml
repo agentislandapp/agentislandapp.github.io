@@ -8,6 +8,16 @@
          <item> block for each notarized DMG. Empty until the first release:
          Sparkle treats an empty channel as "you are up to date". -->
     <item>
+      <title>8.1.0</title>
+      <pubDate>Sun, 06 Sep 2026 19:27:21 +0000</pubDate>
+      <sparkle:version>8.1.0</sparkle:version>
+      <sparkle:shortVersionString>8.1.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p><strong>Pro is now $49 once, instead of $8 a month.</strong> No subscription and no renewal. If you already bought a subscription, nothing about your licence changes and you will not be charged again &mdash; write to support@tikistudios.io and we will sort it out in your favour.</p><p><strong>The sponsor slot no longer pays you, and it has moved.</strong> The earlier plan credited sponsor money against your subscription. With a one-time price there is no bill to credit, and paying people per impression is what ad networks class as invalid traffic &mdash; so the earnings side is removed rather than left as a promise that could not be kept. Sponsored lines now fund the free tier, and a Pro licence switches them off for good in Settings &rarr; Sponsors.</p><p>Nothing is running yet: no sponsor has ever been shown to anyone. What has not changed is the rule the whole feature is built on &mdash; a sponsored line can never appear while an agent is waiting on you or working.</p>]]></description>
+      <enclosure url="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.0/AgentIsland-8.1.0.dmg"
+                 type="application/octet-stream" sparkle:edSignature="4ijw89rY3OkzNOJrcZrET8+5FTIipaQCuPr/34sxgZ+iTft6S+5j+DW19OHg6RifNIRZSbbKf/96mJrhzz6tDA==" length="5533214" />
+    </item>
+    <item>
       <title>8.0.9</title>
       <sparkle:version>8.0.9</sparkle:version>
       <sparkle:shortVersionString>8.0.9</sparkle:shortVersionString>
