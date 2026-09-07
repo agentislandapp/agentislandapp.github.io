@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AgentIsland — answer your coding agents from the notch</title>
-<meta name="description" content="When your coding agent asks permission, the request appears at the top of your screen. Answer it there and it carries on.">
+<meta name="description" content="Run several Claude Code sessions and see which one is blocked. Permission requests appear at the top of your screen; answer them there and the agent carries on.">
 <meta property="og:title" content="AgentIsland">
-<meta property="og:description" content="Answer your coding agents from the notch, instead of hunting for the right terminal tab.">
+<meta property="og:description" content="Three agents running. One place to see which one needs you.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://agentislandapp.github.io/hero.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -123,12 +123,13 @@
 
 <header>
   <img src="icon.png" alt="AgentIsland">
-  <h1>Answer your coding agents<br>from the notch</h1>
-  <p class="tagline">When Claude Code stops and asks permission to run something, the request appears at the top of your screen. Answer it there and the agent carries on — no hunting for the right terminal tab.</p>
+  <h1>Three agents running.<br>One place to see which needs you.</h1>
+  <p class="tagline">When Claude Code stops to ask permission, the request appears at the top of your screen &mdash; answer it there and the agent carries on. Run several at once and they all report to the same place, so no session sits blocked while you are looking at a different terminal tab.</p>
   <div class="cta">
     <a class="btn primary" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.0/AgentIsland-8.1.0.dmg">Download for macOS</a>
     <a class="btn ghost" href="#pricing">See pricing</a>
   </div>
+  <p class="meta">Native macOS · Developer ID signed and notarized · no account, no telemetry</p>
   <p class="meta">macOS 14+ · Apple silicon and Intel · works with or without a real notch</p>
   <p class="meta">or <code>brew install --cask agentislandapp/tap/agentisland</code></p>
   <!-- Stated this high on the page because it is the objection that stops
@@ -158,7 +159,7 @@
   <strong>Free, paid for by one sponsored line. Or $49 once, and never see one.</strong>
   The free tier is not a trial and does not expire &mdash; it is funded by a single
   sponsored line that appears only when nothing is running and nothing is waiting on
-  you, at most once every four hours. Buying Pro turns that off for good and puts every
+  you, at most once every four hours. Pro gives you a switch to turn it off and puts every
   session in view at once, with the cockpit and the other CLIs. One payment, no subscription.
   <div class="meta">No sponsor runs today. The switch and the machinery exist; it starts once enough people use the app for a sponsor to buy the slot.</div>
 </div>
@@ -241,12 +242,12 @@
         <li>Usage history and cost per project</li>
         <li>Voice messages</li>
         <li>Every supported CLI</li>
-        <li>Turns sponsors off, for good</li>
+        <li>A switch to turn the sponsored line off</li>
       </ul>
       <a class="btn primary" href="https://buy.polar.sh/polar_cl_zCyTuukP3KUsKxvVtbd5gGF0OYiKOyY5764sC3DrdRM">Buy Pro</a>
     </div>
   </div>
-  <p class="note" style="margin-top:18px">Payment is handled by Polar, which is the merchant of record and charges in USD with tax included. You get a licence key by email; the same download becomes Pro once you paste the key into Settings &rarr; Licence. One licence covers three Macs and can be moved between them. If the app doesn't do what this page says it does, ask for a refund within 14 days and you'll get one &mdash; write to <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>.</p>
+  <p class="note" style="margin-top:18px">Payment is handled by Polar, which is the merchant of record and charges in USD with tax included. You get a licence key by email; the same download becomes Pro once you paste the key into Settings &rarr; Licence. One licence covers three Macs and can be moved between them. If it does not fit the way you work, ask for a refund within 14 days and you'll get one &mdash; you do not have to argue that the app is broken &mdash; write to <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>.</p>
 </section>
 
 <section>
@@ -306,7 +307,7 @@
   <p class="note">Claude Code, Gemini CLI and Crush get full permission cards; OpenCode is read through its live session API; Codex, Qwen Code, iFlow, Factory Droid and Kimi report status events; a few more are detected only. The table above states the depth per tool rather than implying more.</p>
 
   <h3>Is it free?</h3>
-  <p class="note">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, for as long as you use it, and they are never rationed by session &mdash; if a second Claude Code session stops to ask you something, the card still reaches you and you can still answer it. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once &mdash; no subscription &mdash; and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and turns off the sponsored line that pays for the free tier. It is for people running several agents in parallel, not a gate on the basic thing.</p>
+  <p class="note">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, for as long as you use it, and they are never rationed by session &mdash; if a second Claude Code session stops to ask you something, the card still reaches you and you can still answer it. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once &mdash; no subscription &mdash; and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and gives you a switch to turn off the sponsored line that pays for the free tier &mdash; Pro sees it too unless you flip that switch in Settings. It is for people running several agents in parallel, not a gate on the basic thing.</p>
 
   <h3>Why do my allow rules keep asking anyway?</h3>
   <p class="note">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</p>
