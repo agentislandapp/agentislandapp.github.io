@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why your Claude Code allow rules keep asking anyway</title>
+<meta name="description" content="Allow rules match the whole command string as a prefix, so one cd in front of a command defeats them. What the permission system actually checks, in what order, and why bypass mode does not bypass hooks.">
+<meta property="og:title" content="Why your Claude Code allow rules keep asking anyway">
+<meta property="og:description" content="Allow rules match the whole command string as a prefix, so one cd in front of a command defeats them.">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://agentislandapp.github.io/permissions.html">
+<link rel="icon" href="icon.png">
+<style>
+  /* Same inline-everything rule as the rest of the site: no fonts, no
+     frameworks, no trackers beyond the one declared beacon. */
+  :root {
+    --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
+    --text: #f5f5f7; --dim: rgba(245,245,247,.72); --faint: rgba(245,245,247,.38);
+    --accent: #e8825a; --green: #66bb6a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 42em; margin: 0 auto; padding: 0 24px; }
+  header { padding: 64px 0 8px; }
+  h1 { font-size: 34px; line-height: 1.2; margin: 0 0 14px; letter-spacing: -.02em; }
+  .standfirst { font-size: 19px; color: var(--dim); margin: 0 0 8px; }
+  .byline { color: var(--faint); font-size: 14px; margin: 0 0 40px; }
+  h2 { font-size: 22px; margin: 44px 0 14px; letter-spacing: -.01em; }
+  h3 { font-size: 17px; margin: 30px 0 8px; }
+  p { color: var(--dim); margin: 0 0 16px; }
+  li { color: var(--dim); margin-bottom: 8px; }
+  a { color: var(--accent); }
+  code {
+    background: rgba(255,255,255,.07); padding: 2px 6px; border-radius: 5px;
+    font-size: .88em; color: var(--text);
+  }
+  pre {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; font-size: 14px; line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 0 0 16px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--faint); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
+  .note {
+    background: var(--panel); border: 1px solid var(--line);
+    border-left: 3px solid var(--accent); border-radius: 10px;
+    padding: 14px 16px; margin: 0 0 20px; font-size: 15.5px; color: var(--dim);
+  }
+  .note strong { color: var(--text); }
+  footer {
+    margin: 56px 0 64px; padding-top: 24px; border-top: 1px solid var(--line);
+    color: var(--faint); font-size: 14.5px;
+  }
+  footer a { color: var(--dim); }
+</style>
+<!-- Cloudflare Web Analytics, same cookieless beacon as every other page here.
+     A new page without this snippet is invisible in the dashboard, which is
+     exactly the sort of thing nobody notices for weeks. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Why your Claude Code allow rules keep asking anyway</h1>
+  <p class="standfirst">You allowed <code>npm test</code>. It is still asking. The reason is that allow rules match the whole command string as a prefix, so a single <code>cd</code> in front of the command defeats the rule you wrote.</p>
+  <p class="byline">Written while building <a href="/">AgentIsland</a>, which mirrors this matching to decide what to put on screen. Everything below was checked against the real files rather than the docs.</p>
+</header>
+
+<h2>The order the checks run in</h2>
+
+<p>Three separate gates decide whether you get asked, and they are not the same gate. In order:</p>
+
+<table>
+  <tr><th>Gate</th><th>What it does</th></tr>
+  <tr><td><strong>Deny rules</strong></td><td>Checked first. A match stops the call whatever else is set.</td></tr>
+  <tr><td><strong>Allow rules</strong></td><td>Checked next. A match runs the tool with no prompt.</td></tr>
+  <tr><td><strong>Hooks</strong></td><td>A separate mechanism entirely. A <code>PreToolUse</code> hook can hold the call and answer for you.</td></tr>
+</table>
+
+<p>Two consequences people trip over constantly, both of which follow from that ordering:</p>
+
+<div class="note">
+  <strong>Deny beats allow, always.</strong> You cannot re-permit something with a broader allow rule — the deny is read first and nothing later overrules it. This is the property that makes deny rules worth writing: they hold even in modes where an approval prompt would never have appeared.
+</div>
+
+<div class="note">
+  <strong>Bypass mode does not bypass hooks.</strong> Permission mode and hooks are separate gates, and bypass only opens one of them. A <code>PreToolUse</code> hook that asks will still stop you in bypass or auto mode — and the prompt it produces can look exactly like a normal permission prompt, which is why "it suddenly started asking again" so often turns out to be a hook someone added weeks ago.
+</div>
+
+<h2>The prefix rule, which is the actual answer</h2>
+
+<p>An allow rule looks like <code>Tool(pattern)</code>. The pattern is matched against the tool's input, and there are only three shapes:</p>
+
+<table>
+  <tr><th>Rule</th><th>Matches</th></tr>
+  <tr><td><code>Bash</code></td><td>every Bash call, whatever the command</td></tr>
+  <tr><td><code>Bash(*)</code></td><td>the same thing, written explicitly</td></tr>
+  <tr><td><code>Bash(npm test)</code></td><td>exactly the string <code>npm test</code>, nothing else</td></tr>
+  <tr><td><code>Bash(npm test:*)</code></td><td>any command <em>starting with</em> <code>npm test</code></td></tr>
+</table>
+
+<p>The trailing <code>:*</code> is a <strong>prefix match on the entire command string</strong>. Not on the program name, not on each command in a chain — on the whole string, from the first character. Which means:</p>
+
+<pre><code>Rule:    Bash(npm test:*)
+
+npm test                  ✅ matches — starts with "npm test"
+npm test --watch          ✅ matches
+cd frontend && npm test   ❌ no match — starts with "cd"
+NODE_ENV=test npm test    ❌ no match — starts with "NODE_ENV"
+(cd frontend; npm test)   ❌ no match — starts with "("
+</code></pre>
+
+<p>Nothing here is a bug. It is a prefix comparison doing exactly what a prefix comparison does. But it explains the single most common complaint about this system: the agent chains a <code>cd</code> in front of a command, and your carefully written allow rule silently stops applying. You did not do anything wrong; you wrote a rule against a shape the agent then stopped using.</p>
+
+<h3>What to do about it</h3>
+
+<ul>
+  <li><strong>Match the program, not the invocation.</strong> <code>Bash(npm:*)</code> survives flags and arguments that <code>Bash(npm test:*)</code> does not. Broader, but broad in a direction you can reason about.</li>
+  <li><strong>Ask the agent to stop chaining.</strong> A line in <code>CLAUDE.md</code> saying to run commands from the repo root rather than <code>cd</code>-ing first removes the problem at the source, and is more reliable than trying to enumerate every prefix.</li>
+  <li><strong>Do not try to enumerate.</strong> <code>cd a && npm test</code>, <code>cd b && npm test</code>, and so on is an infinite list, and every entry is a rule you have to keep correct forever.</li>
+</ul>
+
+<h2>Where the rules are actually read from</h2>
+
+<p>Allow and deny rules are merged from more places than most people expect, and a rule in one file will not show up when you look in another:</p>
+
+<ul>
+  <li><code>~/.claude/settings.json</code> — your own, applies everywhere</li>
+  <li><code>&lt;project&gt;/.claude/settings.json</code> — checked into the repo, applies to everyone working on it</li>
+  <li><code>&lt;project&gt;/.claude/settings.local.json</code> — yours, for this repo, not checked in</li>
+  <li><code>~/.claude.json</code> — <strong>the one people miss.</strong> Session approvals ("don't ask again") land here under <code>projects → &lt;path&gt; → allowedTools</code>, not in any settings file</li>
+</ul>
+
+<div class="note">
+  <strong>That last file explains a specific confusion:</strong> you clicked "don't ask again" once, months ago, and now cannot find the rule anywhere in your settings. It is in <code>~/.claude.json</code>, keyed by the project's absolute path — so it also silently stops applying if you move or rename the directory, or reach it through a different symlink.
+</div>
+
+<h2>What a blocking hook can actually do</h2>
+
+<p>A <code>PreToolUse</code> hook is not just a notification. It runs <em>before</em> the tool, and the call waits for it. Whatever JSON it prints becomes the decision, and printing <code>{}</code> means "no opinion" — the normal terminal prompt appears, exactly as if the hook were not there.</p>
+
+<p>That fallback is the whole design, and it is worth copying if you write one of your own:</p>
+
+<ul>
+  <li><strong>Fail open, never closed.</strong> If your hook cannot reach whatever it asks, print <code>{}</code> and let the terminal prompt happen. A hook that fails closed turns a bug in your script into a session that cannot run anything.</li>
+  <li><strong>Never exit non-zero</strong> for an ordinary failure. Print <code>{}</code> and exit 0.</li>
+  <li><strong>Stay under the timeout.</strong> Claude Code gives a hook 55 seconds. If yours waits on something, give it a shorter deadline of its own — ours uses <code>curl -m 52</code> — so it always answers before the harness stops waiting, rather than being killed mid-thought.</li>
+</ul>
+
+<h2>A worked example: making a destructive command impossible</h2>
+
+<p>Deny rules are checked before the permission mode, so this holds even in bypass or auto mode, where no prompt would ever have appeared:</p>
+
+<pre><code>{
+  "permissions": {
+    "deny": [
+      "Bash(sudo date:*)",
+      "Bash(sudo systemsetup:*)",
+      "Bash(rm -rf /:*)"
+    ]
+  }
+}</code></pre>
+
+<p>Worth knowing the limit of this, though, because it is easy to over-trust: deny rules constrain <em>the agent's own tool calls</em>. They do not constrain a script the agent wrote and then ran. If the agent writes a Python file that reads your <code>.env</code> and connects to production, that is Python reading a file it is allowed to read, and no rule here sees it. The boundary that holds in that case is what the credential itself is permitted to do — a read-only database user, a reader-role service principal — not what the agent is permitted to type.</p>
+
+<footer>
+  <p>Written by the person who built <a href="/">AgentIsland</a> — a macOS app that puts these permission prompts in the notch, so you answer them without hunting for the right terminal window. It is free for one session, and the free tier is not a trial.</p>
+  <p>Corrections welcome: <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">open an issue</a>. Last checked against Claude Code in September 2026.</p>
+</footer>
+
+</div>
+</body>
+</html>
