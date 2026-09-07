@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Why your Claude Code hook isn't running</title>
-<meta name="description" content="Start with claude --debug hooks, which prints every hook it considers and every one it runs. Then the five things that silently stop a hook: an unquoted path, a matcher that misses, a non-zero exit, the timeout, and a PATH that is not your shell's.">
+<meta name="description" content="Start with claude --debug hooks, which prints every hook it considers and every one it runs. Then the five things that silently stop a hook: an unquoted path, a matcher that misses, a misunderstood exit code, the timeout you did not set, and a PATH that is not your shell's.">
 <meta property="og:title" content="Why your Claude Code hook isn't running">
 <meta property="og:description" content="claude --debug hooks tells you in one line whether it is your hook or your config. Then the five silent failure modes.">
 <meta property="og:type" content="article">
@@ -69,7 +69,7 @@
 <header>
   <h1>Why your Claude Code hook isn't running</h1>
   <p class="standfirst">A hook that fails does not announce it. It just never seems to fire, and you are left guessing whether the problem is your script, your matcher, or your JSON. There is a flag that answers that in one line, and then five failure modes that account for nearly all of the rest.</p>
-  <p class="byline">Written while building <a href="/">AgentIsland</a>, which installs and lives on these hooks. Everything below was checked against a real installed hook and the CLI's own help output rather than remembered from docs.</p>
+  <p class="byline">Written while building <a href="/">AgentIsland</a>, which installs and lives on these hooks. The flags below were checked against the CLI on this machine and the behaviour against the <a href="https://code.claude.com/docs/en/hooks">hooks documentation</a>, September 2026. Where a number comes from our own config rather than a default, it says so — an earlier version of this page did not, and got the timeout wrong as a result.</p>
 </header>
 
 <h2>First: find out whether it ran at all</h2>
@@ -129,9 +129,15 @@
 
 <p>The matcher is tested against the tool name, so it has to be the name Claude Code uses — <code>Bash</code>, <code>Write</code>, <code>Edit</code>, <code>NotebookEdit</code>, <code>WebFetch</code> — not the command you are running and not a lowercase version. A matcher of <code>bash</code> will not match <code>Bash</code>. A matcher of <code>npm</code> will never match anything, because no tool is called that; the command is <em>input</em> to the <code>Bash</code> tool, not a tool of its own. If <code>--debug hooks</code> shows your hook being considered but never run, this is almost always why.</p>
 
-<h3>3. Exiting non-zero to mean something</h3>
+<h3>3. Misreading what the exit code does</h3>
 
-<p>A hook communicates through what it prints on stdout, not through its exit status. For a <code>PreToolUse</code> hook, whatever JSON it prints becomes the decision, and printing <code>{}</code> means <em>no opinion</em> — the normal terminal prompt appears exactly as if the hook were not installed.</p>
+<p>A hook has two channels, and conflating them causes trouble in both directions. What it prints on stdout can carry a decision — for a <code>PreToolUse</code> hook, JSON becomes the decision, and printing <code>{}</code> means <em>no opinion</em>, so the normal permission flow happens exactly as if the hook were not installed. But the exit code is not merely advisory:</p>
+
+<div class="note">
+  <strong>Exit 2 blocks, and it wins.</strong> On events that can block, exit 2 stops the tool call whether or not you printed JSON — it overrides even a JSON <code>permissionDecision</code> of <code>allow</code>, and it stops the call before permission rules are evaluated, so it beats an allow rule too. That makes it a deliberate tool, and also a hazard: a script that dies with status 2 for an unrelated reason blocks real work.
+</div>
+
+<p>So the rule is not "never exit non-zero" — it is that <strong>an ordinary failure must exit 0</strong>. Reserve a non-zero status for a block you actually mean.</p>
 
 <p>So the rule for anything unexpected is: print <code>{}</code> and exit 0. Here is the entire fallback logic from our own hook, which is the part worth copying:</p>
 
@@ -149,7 +155,7 @@ exit 0</code></pre>
 
 <h3>4. The timeout, which is shorter than you think</h3>
 
-<p>A blocking hook gets 55 seconds before the harness stops waiting. If your hook waits on anything — a network call, a user, another process — give it a deadline of its own that is comfortably inside that window, so it always answers rather than being killed mid-thought. Ours waits on a person clicking a button, so it uses <code>curl -m 52</code>: three seconds of headroom, and a hook that returns "no opinion" rather than a hook that returns nothing.</p>
+<p>The default for a <code>command</code> hook is <strong>600 seconds</strong> on most events — lower on a few, such as 30 for <code>UserPromptSubmit</code> and 10 for <code>MessageDisplay</code>. Ten minutes is far longer than you want a blocking hook to hold a tool call, so set <code>timeout</code> explicitly in the config rather than inheriting it, and then give the work inside the script a slightly shorter deadline than the timeout you set, so it always answers rather than being killed mid-thought. Ours waits on a person clicking a button: <code>"timeout": 55</code> in the config, <code>curl -m 52</code> in the script, three seconds of headroom. Those are our numbers, not defaults — a figure you read anywhere, including here, is worth checking against your own config.</p>
 
 <p>You can also set <code>timeout</code> per hook in the config, as in the example above. Lowering it is the right move for fire-and-forget hooks: our notification hooks are set to 10 seconds because nothing is waiting on their answer, and a slow one should get out of the way rather than hold up the session.</p>
 

@@ -162,11 +162,11 @@ func isStale(now: Date) -> Bool {
   <tr><th></th><th>Status events</th><th>Permission prompt</th></tr>
   <tr><td>Job</td><td>Report what happened</td><td>Answer a question, or decline to</td></tr>
   <tr><td>Design</td><td>Fire and forget</td><td>Blocking</td></tr>
-  <tr><td>Our timeout</td><td><code>curl -m 0.3</code></td><td><code>curl -m 52</code></td></tr>
-  <tr><td>On failure</td><td>Give up silently, exit 0</td><td>Print <code>{}</code> — no opinion — and exit 0</td></tr>
+  <tr><td>Our timeout</td><td><code>curl -m 0.3</code></td><td><code>curl -m 52</code>, inside a configured <code>"timeout": 55</code></td></tr>
+  <tr><td>On failure</td><td>Give up silently, exit 0</td><td>Print <code>{}</code> — no opinion — and exit 0 (exit 2 would block)</td></tr>
 </table>
 
-<p>A status hook must never make the CLI wait: nothing depends on its answer, so a third of a second is generous and anything longer is a tax on every single tool call. A permission hook is the opposite — something <em>is</em> waiting on its answer — but it still must return before the 55-second harness timeout, which is why ours gives itself 52. Both exit 0 always. Neither is allowed to be the reason your agent stopped working. There is more on that, including the five ways a hook silently does nothing, in <a href="/hooks.html">why your Claude Code hook isn't running</a>.</p>
+<p>A status hook must never make the CLI wait: nothing depends on its answer, so a third of a second is generous and anything longer is a tax on every single tool call. A permission hook is the opposite — something <em>is</em> waiting on its answer — but it still has to return inside whatever <code>timeout</code> it was given, which is why we set that to 55 in the config and give the <code>curl</code> inside it 52. The default for a command hook is 600 seconds, which is much longer than you want a blocking hook to hold a tool call, so set it deliberately. Both exit 0 on an ordinary failure — and deliberately so, because exit 2 would block the call. There is more on that, including the five ways a hook silently does nothing, in <a href="/hooks.html">why your Claude Code hook isn't running</a>.</p>
 
 <footer>
   <p>Written by the person who built <a href="/">AgentIsland</a> — a macOS app that puts this state in the notch: a dot per session while things are running, and the actual permission prompt, with Deny and Allow, the moment one is waiting. It is free for one session, and the free tier is not a trial.</p>
