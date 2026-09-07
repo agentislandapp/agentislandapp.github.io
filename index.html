@@ -158,8 +158,8 @@
   <strong>Free, paid for by one sponsored line. Or $49 once, and never see one.</strong>
   The free tier is not a trial and does not expire &mdash; it is funded by a single
   sponsored line that appears only when nothing is running and nothing is waiting on
-  you, at most once every four hours. Buying Pro turns that off for good and unlocks
-  every session at once, the cockpit and the other CLIs. One payment, no subscription.
+  you, at most once every four hours. Buying Pro turns that off for good and puts every
+  session in view at once, with the cockpit and the other CLIs. One payment, no subscription.
   <div class="meta">No sponsor runs today. The switch and the machinery exist; it starts once enough people use the app for a sponsor to buy the slot.</div>
 </div>
 
@@ -223,12 +223,12 @@
       <h3>Free</h3>
       <div class="price">$0 — forever, not a trial</div>
       <ul>
-        <li><strong>Permission, question and plan cards — unlimited.</strong> No daily cap, no countdown, no card on file</li>
-        <li>One session at a time</li>
+        <li><strong>Permission, question and plan cards — unlimited, from every session you run.</strong> No daily cap, no countdown, no card on file</li>
+        <li>One session listed at a time &mdash; the one that most needs you</li>
         <li>Claude Code</li>
         <li>Sponsored by one occasional line, which is what pays for it</li>
       </ul>
-      <p class="note" style="margin-top:12px">The part that saves you the context switch is not the paid part. If one session is all you run, you are done here &mdash; nothing expires and nothing starts asking.</p>
+      <p class="note" style="margin-top:12px">The part that saves you the context switch is not the paid part, and it is not rationed either: if a second session stops to ask you something, you still get the card and can still answer it here. What Free does not do is <em>show you all of them at once</em> &mdash; the list holds one. Nothing expires and nothing starts asking.</p>
       <a class="btn ghost" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.0/AgentIsland-8.1.0.dmg">Download</a>
     </div>
     <div class="tier">
@@ -236,7 +236,7 @@
       <div class="price">$49 once — no subscription</div>
       <ul>
         <li>For running several agents at once &mdash; everything below is about that</li>
-        <li>Every session at once</li>
+        <li>Every session <em>in view</em> at once, not one at a time</li>
         <li>The cockpit (⌥P) — every session on one screen, answered from the keyboard</li>
         <li>Usage history and cost per project</li>
         <li>Voice messages</li>
@@ -306,7 +306,7 @@
   <p class="note">Claude Code, Gemini CLI and Crush get full permission cards; OpenCode is read through its live session API; Codex, Qwen Code, iFlow, Factory Droid and Kimi report status events; a few more are detected only. The table above states the depth per tool rather than implying more.</p>
 
   <h3>Is it free?</h3>
-  <p class="note">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, for one Claude Code session at a time, for as long as you use it. Pro is $49 once &mdash; no subscription &mdash; and adds every session at once, the keyboard cockpit, cost history and the other CLIs, and turns off the sponsored line that pays for the free tier. It is for people running several agents in parallel, not a gate on the basic thing.</p>
+  <p class="note">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, for as long as you use it, and they are never rationed by session &mdash; if a second Claude Code session stops to ask you something, the card still reaches you and you can still answer it. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once &mdash; no subscription &mdash; and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and turns off the sponsored line that pays for the free tier. It is for people running several agents in parallel, not a gate on the basic thing.</p>
 
   <h3>Why do my allow rules keep asking anyway?</h3>
   <p class="note">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</p>
