@@ -314,6 +314,9 @@
   <h3>I wrote a Claude Code hook and it does nothing. Why?</h3>
   <p class="note">Start with <code>claude --debug hooks</code>, which shows whether your hook is ever invoked and so splits a config problem from a script problem in one line. <a href="hooks.html">The rest is here</a>: the unquoted path with a space in it, the matcher that misses, and why a hook must fail open rather than exit non-zero.</p>
 
+  <h3>Why don't I get notified when Claude Code finishes?</h3>
+  <p class="note">Two reasons, usually. Claude Code only fires its notification when it thinks you are <em>away</em> from the terminal, so watching the window is a test designed to fail; and a desktop notification is sent by default only in Ghostty, Kitty and iTerm2 — everywhere else you need <code>"preferredNotifChannel": "terminal_bell"</code>. <a href="done.html">The settings, plus the traps</a> (tmux swallows it, iTerm2 needs forwarding switched on) — and why "done" turns out to be three states rather than one.</p>
+
   <h3>Does it send my prompts or code anywhere?</h3>
   <p class="note">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</p>
 </section>

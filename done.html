@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to know when Claude Code is done</title>
+<meta name="description" content="Claude Code only fires its notification when it thinks you are away from the terminal, and only three terminals get a desktop notification by default. The settings that fix that, and why 'done' turns out to be three different states.">
+<meta property="og:title" content="How to know when Claude Code is done">
+<meta property="og:description" content="Why the notification never arrives, the settings that fix it, and why 'done' is three states rather than one.">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://agentislandapp.github.io/done.html">
+<link rel="icon" href="icon.png">
+<style>
+  /* Same inline-everything rule as the rest of the site: no fonts, no
+     frameworks, no trackers beyond the one declared beacon. */
+  :root {
+    --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
+    --text: #f5f5f7; --dim: rgba(245,245,247,.72); --faint: rgba(245,245,247,.38);
+    --accent: #e8825a; --green: #66bb6a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 42em; margin: 0 auto; padding: 0 24px; }
+  header { padding: 64px 0 8px; }
+  h1 { font-size: 34px; line-height: 1.2; margin: 0 0 14px; letter-spacing: -.02em; }
+  .standfirst { font-size: 19px; color: var(--dim); margin: 0 0 8px; }
+  .byline { color: var(--faint); font-size: 14px; margin: 0 0 40px; }
+  h2 { font-size: 22px; margin: 44px 0 14px; letter-spacing: -.01em; }
+  h3 { font-size: 17px; margin: 30px 0 8px; }
+  p { color: var(--dim); margin: 0 0 16px; }
+  li { color: var(--dim); margin-bottom: 8px; }
+  a { color: var(--accent); }
+  code {
+    background: rgba(255,255,255,.07); padding: 2px 6px; border-radius: 5px;
+    font-size: .88em; color: var(--text);
+  }
+  pre {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; font-size: 14px; line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 0 0 16px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--faint); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
+  .note {
+    background: var(--panel); border: 1px solid var(--line);
+    border-left: 3px solid var(--accent); border-radius: 10px;
+    padding: 14px 16px; margin: 0 0 20px; font-size: 15.5px; color: var(--dim);
+  }
+  .note strong { color: var(--text); }
+  footer {
+    margin: 56px 0 64px; padding-top: 24px; border-top: 1px solid var(--line);
+    color: var(--faint); font-size: 14.5px;
+  }
+  footer a { color: var(--dim); }
+</style>
+<!-- Cloudflare Web Analytics, same cookieless beacon as every other page here. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>How to know when Claude Code is done</h1>
+  <p class="standfirst">You start a long task, switch to something else, and come back nine minutes later to find it finished eight minutes ago — or worse, that it stopped to ask you a question and has been sitting there since. There is a built-in notification for this. It is off in most terminals, and it only fires when Claude Code believes you are away.</p>
+  <p class="byline">Written while building <a href="/">AgentIsland</a>, which does nothing but track this state. The settings below are from Claude Code's own documentation; the second half is what we learned getting the state machine wrong.</p>
+</header>
+
+<h2>The part that is already built in</h2>
+
+<p>Claude Code fires a notification when it finishes a task or pauses for a permission prompt — but with a condition that explains most of the "it never notifies me" reports: <strong>it only fires when you appear to be away from the terminal.</strong> If you are sitting in the window watching it work, there is nothing to interrupt you about, so nothing happens. Testing it by staring at the terminal is therefore a test that is designed to fail.</p>
+
+<p>The second condition is the terminal itself. A desktop notification is sent by default in <strong>Ghostty, Kitty and iTerm2</strong>, and nowhere else. In any other terminal — Warp, the VS Code integrated terminal, Apple Terminal, Alacritty — nothing arrives until you ask for the bell instead:</p>
+
+<pre><code>// ~/.claude/settings.json
+{
+  "preferredNotifChannel": "terminal_bell"
+}</code></pre>
+
+<p>Three further things swallow the notification even once it is enabled, and each looks like the feature being broken:</p>
+
+<table>
+  <tr><th>If</th><th>Then</th></tr>
+  <tr><td>You use iTerm2</td><td>Forwarding is not on by default. Settings → Profiles → Terminal, enable Notification Center alerts, then under Filter Alerts allow escape-sequence-generated ones.</td></tr>
+  <tr><td>You run inside tmux</td><td>tmux swallows it. <code>set -g allow-passthrough on</code> in <code>~/.tmux.conf</code>, then <code>tmux source-file ~/.tmux.conf</code>.</td></tr>
+  <tr><td>Nothing appears anywhere</td><td>Check that the terminal application itself has notification permission in your OS settings — the notification is delivered by the terminal, not by Claude Code.</td></tr>
+</table>
+
+<p>If you would rather have a sound you choose, a <code>Notification</code> hook runs alongside the built-in one rather than replacing it:</p>
+
+<pre><code>{
+  "hooks": {
+    "Notification": [
+      { "hooks": [{ "type": "command",
+                    "command": "afplay /System/Library/Sounds/Glass.aiff" }] }
+    ]
+  }
+}</code></pre>
+
+<p>That is the whole of the built-in answer, and for a single session it is usually enough. The rest of this page is about why it stops being enough, and it starts with a definition problem.</p>
+
+<h2>"Done" is three states, not one</h2>
+
+<p>If you build anything on top of this — a notifier, a status line, a dashboard — the first thing you discover is that the question "is it done?" has no single answer. There are three states, they mean different things to you, and only one of them is urgent:</p>
+
+<table>
+  <tr><th>State</th><th>What it means</th><th>Does it need you?</th></tr>
+  <tr><td><strong>Running</strong></td><td>Working. Tools are being called.</td><td>No</td></tr>
+  <tr><td><strong>Waiting</strong></td><td>Stopped mid-task on a permission prompt, a question, or a plan to approve.</td><td><strong>Yes, and it is blocked until you answer</strong></td></tr>
+  <tr><td><strong>Idle</strong></td><td>The turn ended. It said its piece and is waiting for your next instruction.</td><td>Only when you want it to</td></tr>
+</table>
+
+<p>The events map onto those states cleanly enough once you know which is which:</p>
+
+<ul>
+  <li><code>UserPromptSubmit</code> and <code>PostToolUse</code> → running. Each one is also proof of life, which matters later.</li>
+  <li><code>Notification</code> → waiting. The message says whether it is a permission request or a question.</li>
+  <li><code>Stop</code> → idle. <strong>Not "the work is finished"</strong> — it means <em>this turn</em> ended, which is a much smaller claim.</li>
+  <li><code>SubagentStop</code> → nothing, as far as the parent is concerned. A subagent finishing says nothing about whether the session that spawned it needs you.</li>
+</ul>
+
+<div class="note">
+  <strong>The distinction that matters most is Waiting versus Idle,</strong> because they feel identical from the outside — in both cases the terminal has gone quiet — and they could not be more different. Idle means it is done and you can look whenever you like. Waiting means it stopped mid-task and <em>nothing will happen until you answer</em>, which is the case where a nine-minute delay is nine minutes wasted. A notifier that treats "quiet" as one state will either nag you about every finished turn or let you sit on a blocked prompt.
+</div>
+
+<h2>The trap: a status nobody is going to correct</h2>
+
+<p>Here is the failure we shipped, and it is the one worth stealing the fix for. On 21 August a session sat showing <em>waiting for your input</em> for over an hour. The user had answered in the terminal within seconds. Nothing was wrong with the answer — the problem was that the hooks had been connected <em>after</em> that session started, so the event that would have cleared the waiting state was never sent. The state was correct when it was written and quietly became a lie afterwards.</p>
+
+<p>This is not a niche case. Any of these produce the same shape:</p>
+
+<ul>
+  <li>The session started before your hooks were installed</li>
+  <li>The process was killed, so no <code>Stop</code> and no <code>SessionEnd</code> ever arrives</li>
+  <li>The machine slept mid-task</li>
+  <li>Your hook script broke for ten minutes and you fixed it</li>
+</ul>
+
+<p>An event-driven state machine only knows what it was told. It cannot distinguish "still waiting" from "was waiting, and the update went missing", because both look like silence. So it needs one rule that does not depend on receiving anything:</p>
+
+<pre><code>// After this long with no event at all, a non-idle status
+// is no longer evidence of anything.
+static let staleAfter: TimeInterval = 10 * 60
+
+func isStale(now: Date) -> Bool {
+    status != .idle &amp;&amp; now.timeIntervalSince(lastEventAt) >= staleAfter
+}</code></pre>
+
+<p>Ten minutes of total silence and we stop asserting the state. Note the <code>status != .idle</code> half: idle is the one state that <em>should</em> persist, because a session that ended its turn an hour ago is still, correctly, a session that ended its turn. Only the active claims expire. The principle generalises past this codebase: <strong>a status you cannot stand behind must not be presented as current</strong>, and stale evidence should decay on its own rather than wait for a correction that may never come.</p>
+
+<h2>Two hooks, opposite designs</h2>
+
+<p>One last thing worth copying if you write your own. Status events and permission prompts want opposite designs, and using one design for both is how people end up with a notifier that makes their agent feel slow.</p>
+
+<table>
+  <tr><th></th><th>Status events</th><th>Permission prompt</th></tr>
+  <tr><td>Job</td><td>Report what happened</td><td>Answer a question, or decline to</td></tr>
+  <tr><td>Design</td><td>Fire and forget</td><td>Blocking</td></tr>
+  <tr><td>Our timeout</td><td><code>curl -m 0.3</code></td><td><code>curl -m 52</code></td></tr>
+  <tr><td>On failure</td><td>Give up silently, exit 0</td><td>Print <code>{}</code> — no opinion — and exit 0</td></tr>
+</table>
+
+<p>A status hook must never make the CLI wait: nothing depends on its answer, so a third of a second is generous and anything longer is a tax on every single tool call. A permission hook is the opposite — something <em>is</em> waiting on its answer — but it still must return before the 55-second harness timeout, which is why ours gives itself 52. Both exit 0 always. Neither is allowed to be the reason your agent stopped working. There is more on that, including the five ways a hook silently does nothing, in <a href="/hooks.html">why your Claude Code hook isn't running</a>.</p>
+
+<footer>
+  <p>Written by the person who built <a href="/">AgentIsland</a> — a macOS app that puts this state in the notch: a dot per session while things are running, and the actual permission prompt, with Deny and Allow, the moment one is waiting. It is free for one session, and the free tier is not a trial.</p>
+  <p>Corrections welcome: <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">open an issue</a>. Settings verified against Claude Code's documentation in September 2026.</p>
+</footer>
+
+</div>
+</body>
+</html>
