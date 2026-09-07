@@ -155,6 +155,8 @@ NODE_ENV=test npm test    ❌ no match — starts with "NODE_ENV"
   <li><strong>Stay under the timeout.</strong> Claude Code gives a hook 55 seconds. If yours waits on something, give it a shorter deadline of its own — ours uses <code>curl -m 52</code> — so it always answers before the harness stops waiting, rather than being killed mid-thought.</li>
 </ul>
 
+<p>If you have written one and it appears to do nothing at all, the diagnosis is a different piece: <a href="/hooks.html">why your Claude Code hook isn't running</a> starts with <code>claude --debug hooks</code>, which tells you in one line whether the problem is your configuration or your script.</p>
+
 <h2>A worked example: making a destructive command impossible</h2>
 
 <p>Deny rules are checked before the permission mode, so this holds even in bypass or auto mode, where no prompt would ever have appeared:</p>

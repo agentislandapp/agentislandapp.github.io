@@ -311,6 +311,9 @@
   <h3>Why do my allow rules keep asking anyway?</h3>
   <p class="note">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</p>
 
+  <h3>I wrote a Claude Code hook and it does nothing. Why?</h3>
+  <p class="note">Start with <code>claude --debug hooks</code>, which shows whether your hook is ever invoked and so splits a config problem from a script problem in one line. <a href="hooks.html">The rest is here</a>: the unquoted path with a space in it, the matcher that misses, and why a hook must fail open rather than exit non-zero.</p>
+
   <h3>Does it send my prompts or code anywhere?</h3>
   <p class="note">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</p>
 </section>

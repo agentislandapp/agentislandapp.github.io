@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why your Claude Code hook isn't running</title>
+<meta name="description" content="Start with claude --debug hooks, which prints every hook it considers and every one it runs. Then the five things that silently stop a hook: an unquoted path, a matcher that misses, a non-zero exit, the timeout, and a PATH that is not your shell's.">
+<meta property="og:title" content="Why your Claude Code hook isn't running">
+<meta property="og:description" content="claude --debug hooks tells you in one line whether it is your hook or your config. Then the five silent failure modes.">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://agentislandapp.github.io/hooks.html">
+<link rel="icon" href="icon.png">
+<style>
+  /* Same inline-everything rule as the rest of the site: no fonts, no
+     frameworks, no trackers beyond the one declared beacon. */
+  :root {
+    --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
+    --text: #f5f5f7; --dim: rgba(245,245,247,.72); --faint: rgba(245,245,247,.38);
+    --accent: #e8825a; --green: #66bb6a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 42em; margin: 0 auto; padding: 0 24px; }
+  header { padding: 64px 0 8px; }
+  h1 { font-size: 34px; line-height: 1.2; margin: 0 0 14px; letter-spacing: -.02em; }
+  .standfirst { font-size: 19px; color: var(--dim); margin: 0 0 8px; }
+  .byline { color: var(--faint); font-size: 14px; margin: 0 0 40px; }
+  h2 { font-size: 22px; margin: 44px 0 14px; letter-spacing: -.01em; }
+  h3 { font-size: 17px; margin: 30px 0 8px; }
+  p { color: var(--dim); margin: 0 0 16px; }
+  li { color: var(--dim); margin-bottom: 8px; }
+  a { color: var(--accent); }
+  code {
+    background: rgba(255,255,255,.07); padding: 2px 6px; border-radius: 5px;
+    font-size: .88em; color: var(--text);
+  }
+  pre {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; font-size: 14px; line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 0 0 16px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--faint); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
+  .note {
+    background: var(--panel); border: 1px solid var(--line);
+    border-left: 3px solid var(--accent); border-radius: 10px;
+    padding: 14px 16px; margin: 0 0 20px; font-size: 15.5px; color: var(--dim);
+  }
+  .note strong { color: var(--text); }
+  footer {
+    margin: 56px 0 64px; padding-top: 24px; border-top: 1px solid var(--line);
+    color: var(--faint); font-size: 14.5px;
+  }
+  footer a { color: var(--dim); }
+</style>
+<!-- Cloudflare Web Analytics, same cookieless beacon as every other page here. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Why your Claude Code hook isn't running</h1>
+  <p class="standfirst">A hook that fails does not announce it. It just never seems to fire, and you are left guessing whether the problem is your script, your matcher, or your JSON. There is a flag that answers that in one line, and then five failure modes that account for nearly all of the rest.</p>
+  <p class="byline">Written while building <a href="/">AgentIsland</a>, which installs and lives on these hooks. Everything below was checked against a real installed hook and the CLI's own help output rather than remembered from docs.</p>
+</header>
+
+<h2>First: find out whether it ran at all</h2>
+
+<p>Almost every hook debugging session starts in the wrong place — reading the script — when the actual question is whether Claude Code ever invoked it. Ask directly:</p>
+
+<pre><code>claude --debug hooks</code></pre>
+
+<p><code>--debug</code> takes an optional category filter, so this starts a normal session with hook activity logged and the rest of the noise left out. You will see which hooks are considered for each tool call and which are actually executed. That single line splits the problem in half: if your hook never appears, the fault is in your configuration and nothing in your script can fix it. If it appears and runs, the fault is in what it printed or how long it took.</p>
+
+<p>Two companions worth knowing:</p>
+
+<ul>
+  <li><code>claude --debug-file /tmp/cc.log</code> writes the debug log to a file instead of into your session, which is much easier to read after the fact than a scrolled-away terminal. It enables debug mode on its own, so you do not need both flags.</li>
+  <li><code>claude --bare</code> starts a session that <strong>skips hooks entirely</strong> (along with LSP and plugins). This is the isolation test: if the misbehaviour you are chasing also happens under <code>--bare</code>, your hook was never the cause.</li>
+</ul>
+
+<h2>What the configuration actually looks like</h2>
+
+<p>Hooks live in <code>settings.json</code> under a <code>hooks</code> key, and the shape is three levels deep, which is where a lot of hand-written config goes wrong. Event name, then a list of <em>matcher groups</em>, then a list of hooks in each group:</p>
+
+<pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit|NotebookEdit|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/you/Library/Application Support/YourApp/hook.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+<p>That is a real installed hook, reformatted only for width. The events you can hang a hook on are <code>PreToolUse</code>, <code>PostToolUse</code>, <code>Notification</code>, <code>UserPromptSubmit</code>, <code>Stop</code>, <code>SubagentStop</code>, <code>PreCompact</code>, <code>SessionStart</code> and <code>SessionEnd</code>.</p>
+
+<div class="note">
+  <strong>The matcher is optional, and omitting it is usually what you want</strong> for the non-tool events. A group with no <code>matcher</code> key fires for every occurrence of that event. Our own installer writes a matcher only on <code>PreToolUse</code>, because that is the only event where narrowing to specific tools is meaningful — <code>Notification</code> and <code>PreCompact</code> are not about a tool, so a matcher there can only ever reduce what you see.
+</div>
+
+<h2>The five things that silently stop a hook</h2>
+
+<h3>1. A path with a space in it, unquoted</h3>
+
+<p>This is the most common one on macOS and it is entirely self-inflicted, because the natural place to put a helper script is <code>~/Library/Application Support/…</code> — a path with a space in the middle of it. The <code>command</code> string is handed to a shell, so an unquoted path splits into two arguments and the shell reports a file that does not exist, to nobody.</p>
+
+<pre><code>❌  /Users/you/Library/Application Support/YourApp/hook.sh
+✅  "/Users/you/Library/Application Support/YourApp/hook.sh"</code></pre>
+
+<p>Inside JSON those quotes have to be escaped, which is how you end up with the <code>\"</code> soup in the example above. It looks wrong and it is correct.</p>
+
+<h3>2. A matcher that does not match</h3>
+
+<p>The matcher is tested against the tool name, so it has to be the name Claude Code uses — <code>Bash</code>, <code>Write</code>, <code>Edit</code>, <code>NotebookEdit</code>, <code>WebFetch</code> — not the command you are running and not a lowercase version. A matcher of <code>bash</code> will not match <code>Bash</code>. A matcher of <code>npm</code> will never match anything, because no tool is called that; the command is <em>input</em> to the <code>Bash</code> tool, not a tool of its own. If <code>--debug hooks</code> shows your hook being considered but never run, this is almost always why.</p>
+
+<h3>3. Exiting non-zero to mean something</h3>
+
+<p>A hook communicates through what it prints on stdout, not through its exit status. For a <code>PreToolUse</code> hook, whatever JSON it prints becomes the decision, and printing <code>{}</code> means <em>no opinion</em> — the normal terminal prompt appears exactly as if the hook were not installed.</p>
+
+<p>So the rule for anything unexpected is: print <code>{}</code> and exit 0. Here is the entire fallback logic from our own hook, which is the part worth copying:</p>
+
+<pre><code>RESP=$(curl -s -m 52 ... 2>/dev/null) || RESP=""
+if [ -n "$RESP" ]; then
+  printf '%s\n' "$RESP"
+else
+  printf '{}\n'
+fi
+exit 0</code></pre>
+
+<div class="note">
+  <strong>Fail open, never closed.</strong> A hook that fails closed converts one bug in a shell script into a session that cannot run anything, and the user has no idea why — the failure looks like the agent being broken, not like your hook being broken. Every path through the script above ends in valid JSON and exit 0, including the path where the app it talks to is not running at all.
+</div>
+
+<h3>4. The timeout, which is shorter than you think</h3>
+
+<p>A blocking hook gets 55 seconds before the harness stops waiting. If your hook waits on anything — a network call, a user, another process — give it a deadline of its own that is comfortably inside that window, so it always answers rather than being killed mid-thought. Ours waits on a person clicking a button, so it uses <code>curl -m 52</code>: three seconds of headroom, and a hook that returns "no opinion" rather than a hook that returns nothing.</p>
+
+<p>You can also set <code>timeout</code> per hook in the config, as in the example above. Lowering it is the right move for fire-and-forget hooks: our notification hooks are set to 10 seconds because nothing is waiting on their answer, and a slow one should get out of the way rather than hold up the session.</p>
+
+<h3>5. A PATH that is not your shell's</h3>
+
+<p>Your hook is not launched from your interactive shell, so it does not inherit what your shell profile sets up. A hook that calls <code>jq</code>, <code>node</code>, <code>uv</code> or anything else installed by a version manager can work perfectly when you run it by hand in a terminal and find nothing when Claude Code runs it. Use absolute paths for interpreters and helpers, or resolve them explicitly at the top of the script. This is the failure mode that most reliably survives an afternoon of debugging, because every manual test of the script passes.</p>
+
+<h2>A checklist, in the order that finds it fastest</h2>
+
+<table>
+  <tr><th>Check</th><th>What it rules out</th></tr>
+  <tr><td><code>claude --debug hooks</code></td><td>Whether it is a config problem or a script problem — do this first, always</td></tr>
+  <tr><td><code>ls -l</code> the script</td><td>Not executable. It needs the executable bit and a shebang; ours ships <code>0755</code> with <code>#!/bin/sh</code></td></tr>
+  <tr><td>Run it by hand, echoing its output</td><td>Invalid JSON, or output on stderr instead of stdout</td></tr>
+  <tr><td>Quote the path in <code>command</code></td><td>The space in <code>Application Support</code></td></tr>
+  <tr><td>Compare the matcher to the real tool name</td><td>Case, and matching the command instead of the tool</td></tr>
+  <tr><td><code>claude --bare</code></td><td>Whether your hook was ever involved in the symptom at all</td></tr>
+</table>
+
+<h2>One thing a hook is not</h2>
+
+<p>Hooks and permission rules are separate gates, and it is worth being precise about this because it causes a specific and confusing bug report: <strong>bypass mode does not bypass hooks.</strong> A <code>PreToolUse</code> hook that asks something will still stop you in bypass or auto mode, and the prompt it produces can look exactly like an ordinary permission prompt. "It suddenly started asking again even in auto mode" is, more often than not, a hook someone installed weeks ago. The ordering of those gates, and why allow rules stop applying the moment the agent prepends a <code>cd</code>, is <a href="/permissions.html">a separate piece</a>.</p>
+
+<footer>
+  <p>Written by the person who built <a href="/">AgentIsland</a> — a macOS app that puts these permission prompts in the notch, so you answer them without hunting for the right terminal window. It installs exactly the hooks described above, and removes them cleanly. Free for one session, and the free tier is not a trial.</p>
+  <p>Corrections welcome: <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">open an issue</a>. Last checked against Claude Code in September 2026.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Everything here is public and meant to be indexed. The one exception is
+# /dl.html, which is not a page — it is the click-through that fires the
+# download and the analytics event. Indexed, it would compete with the real
+# pages for the same queries and send searchers to a page with nothing on it.
+User-agent: *
+Allow: /
+Disallow: /dl.html
+
+Sitemap: https://agentislandapp.github.io/sitemap.xml
