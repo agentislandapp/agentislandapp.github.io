@@ -154,6 +154,11 @@ func isStale(now: Date) -> Bool {
 
 <p>Ten minutes of total silence and we stop asserting the state. Note the <code>status != .idle</code> half: idle is the one state that <em>should</em> persist, because a session that ended its turn an hour ago is still, correctly, a session that ended its turn. Only the active claims expire. The principle generalises past this codebase: <strong>a status you cannot stand behind must not be presented as current</strong>, and stale evidence should decay on its own rather than wait for a correction that may never come.</p>
 
+<figure style="margin:0 0 28px">
+  <img src="cockpit.png" alt="Several agent sessions in one list under a permission card, each showing what it is doing and how long ago." style="width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line)">
+  <figcaption style="color:var(--faint);font-size:13.5px;text-align:center;margin-top:10px">Waiting versus idle, made visible: the one that is blocked is at the top with its countdown, the rest carry the age of their last event.</figcaption>
+</figure>
+
 <h2>Two hooks, opposite designs</h2>
 
 <p>One last thing worth copying if you write your own. Status events and permission prompts want opposite designs, and using one design for both is how people end up with a notifier that makes their agent feel slow.</p>
