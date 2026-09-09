@@ -26,7 +26,7 @@
   "url": "https://agentislandapp.github.io/",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "macOS 14.0 or later",
-  "description": "A macOS menu bar app that surfaces AI coding agents' permission prompts in the notch, so you answer them without switching to the right terminal window. Works with Claude Code, Gemini CLI, OpenCode and others.",
+  "description": "A macOS menu bar app that surfaces AI coding agents' permission prompts in the notch, so you answer them without switching to the right terminal window. Twelve CLIs can be answered from the island, including Claude Code, Codex, Cursor, Gemini CLI, Cline, Goose, Amp and OpenCode.",
   "softwareVersion": "8.1.0",
   "downloadUrl": "https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.0/AgentIsland-8.1.0.dmg",
   "screenshot": "https://agentislandapp.github.io/hero.png",
@@ -185,17 +185,17 @@
 </section>
 
 <section>
-  <h2>Works with your CLI</h2>
-  <p class="note" style="margin-top:-8px;margin-bottom:18px">Depth differs per tool, so it is stated per tool. The app says the same thing in its own Settings rather than implying more than it does.</p>
+  <h2>Twelve CLIs, answered from the same place</h2>
+  <p class="note" style="margin-top:-8px;margin-bottom:18px">Depth differs per tool, so it is stated per tool. The app says the same thing in its own Settings rather than implying more than it does &mdash; and where a tool cannot do something, this table says that too.</p>
   <div class="scroll">
   <table>
     <tr><th>What you get</th><th>Tools</th></tr>
-    <tr><td class="depth">Permissions + status</td><td>Claude Code, Gemini CLI, Crush</td></tr>
-    <tr><td class="depth">Live session API</td><td>OpenCode (including OpenCode Zen)</td></tr>
-    <tr><td class="depth">Status events</td><td>Codex, Qwen Code, iFlow, Factory Droid, Kimi</td></tr>
-    <tr><td class="depth">Detected only</td><td>Cursor, Goose, Amp, Aider, Cline, DeepSeek (dsh)</td></tr>
+    <tr><td class="depth">Answer the prompt here</td><td>Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp, OpenCode (including OpenCode Zen)</td></tr>
+    <tr><td class="depth">Status only</td><td>Aider, iFlow &mdash; neither lets an outside program answer a prompt, so theirs stay in the terminal</td></tr>
+    <tr><td class="depth">Needs one step from you</td><td>DeepSeek (dsh) &mdash; it can run our hooks through its Claude Code bridge, but you mount that bridge yourself</td></tr>
   </table>
   </div>
+  <p class="note">Each of those was checked against that tool's own documentation in September 2026, not assumed from a family resemblance. Several of them added blocking hooks recently enough that most integrations have not noticed.</p>
   <p class="note">GLM/Zhipu setups run the real <code>claude</code> binary, so they work through the Claude Code integration.</p>
 </section>
 
@@ -304,7 +304,7 @@
   <p class="note">Yes. On a Mac or an external display without a physical notch the app draws its own island in the same place, so it behaves identically.</p>
 
   <h3>Which coding agents does it work with?</h3>
-  <p class="note">Claude Code, Gemini CLI and Crush get full permission cards; OpenCode is read through its live session API; Codex, Qwen Code, iFlow, Factory Droid and Kimi report status events; a few more are detected only. The table above states the depth per tool rather than implying more.</p>
+  <p class="note">Twelve of fifteen let you answer the prompt in the island: Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp and OpenCode. Aider and iFlow report status only, because neither lets an outside program answer a prompt. DeepSeek can run our hooks through its own Claude Code bridge once you mount it. The table above states the depth per tool rather than implying more.</p>
 
   <h3>Is it free?</h3>
   <p class="note">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, for as long as you use it, and they are never rationed by session &mdash; if a second Claude Code session stops to ask you something, the card still reaches you and you can still answer it. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once &mdash; no subscription &mdash; and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and gives you a switch to turn off the sponsored line that pays for the free tier &mdash; Pro sees it too unless you flip that switch in Settings. It is for people running several agents in parallel, not a gate on the basic thing.</p>
