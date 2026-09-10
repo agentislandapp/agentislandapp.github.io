@@ -5,7 +5,17 @@
     <description>Updates for AgentIsland</description>
     <language>en</language>
     <!-- Entries are appended by Scripts/release.sh, which prints a signed
-         <item> block for each notarized DMG. Empty until the first release:
+         <item>
+      <title>8.1.1</title>
+      <pubDate>Thu, 10 Sep 2026 08:39:03 +0000</pubDate>
+      <sparkle:version>8.1.1</sparkle:version>
+      <sparkle:shortVersionString>8.1.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p><strong>Twelve CLIs can now be answered from the island, up from four.</strong> Codex, Cursor, Qwen, Factory Droid, Kimi, Cline, goose and Amp join Claude Code, Gemini, Crush and OpenCode. Several of these added blocking hooks recently; each one was checked against that tool&rsquo;s own documentation. Aider and iFlow report status only, because neither lets an outside program answer a prompt, and the app says so per tool in Settings &rarr; Integrations.</p><p><strong>This update changes the app&rsquo;s bundle identifier.</strong> macOS treats that as a different app, so after updating you will need to grant Accessibility again in System Settings &rarr; Privacy &amp; Security, and paste your licence key again in Settings &rarr; Licence. Your settings reset to defaults. This is a one-time cost and it is deliberate: the old identifier was scaffolding from another project and had no business being in the signature of something you paid for.</p><p><strong>Accessibility is explained honestly now.</strong> Setup used to describe it as the permission for typing replies, which invited people to skip it and then find that &#8997;P and every other shortcut silently did nothing &mdash; because macOS only hands one app&rsquo;s keystrokes to a trusted process.</p><p><strong>A status that has gone stale keeps its meaning.</strong> After ten minutes of silence a session used to lose its status entirely and read &ldquo;No updates recently&rdquo;, which cannot be told apart from the session ending or the hook dying. It now says what it last was and how long ago that was confirmed.</p><p><strong>Fixes.</strong> An unrecognised licence key explains what a licence key looks like instead of only saying &ldquo;Not found&rdquo;. The upgrade card no longer implies Free is limited to one session&rsquo;s prompts &mdash; it never was; the free tier answers cards from every session and only the list is capped at one.</p>]]></description>
+      <enclosure url="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.1/AgentIsland-8.1.1.dmg"
+                 type="application/octet-stream" sparkle:edSignature="Yp84ZT81Fj2fWXV837VyAGQi3tp2bgBE2tQqGaqN6QbiCYR7Wesk2F66azWYGf4M1LFpoZeX5Q2a87kSp7yoDg==" length="5556438" />
+    </item>
+    <item> block for each notarized DMG. Empty until the first release:
          Sparkle treats an empty channel as "you are up to date". -->
     <item>
       <title>8.1.0</title>
