@@ -8,6 +8,16 @@
          <item> block for each notarized DMG. Empty until the first release:
          Sparkle treats an empty channel as "you are up to date". -->
     <item>
+      <title>8.1.3</title>
+      <pubDate>Thu, 10 Sep 2026 16:09:48 +0000</pubDate>
+      <sparkle:version>8.1.3</sparkle:version>
+      <sparkle:shortVersionString>8.1.3</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p><strong>A new app icon.</strong> The face-in-the-notch mark now used across the site and in setup replaces the old placeholder. Nothing else changes in this release &mdash; no behaviour, no settings.</p>]]></description>
+      <enclosure url="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.3/AgentIsland-8.1.3.dmg"
+                 type="application/octet-stream" sparkle:edSignature="7Ap15rvBeFfLcbWTQxwbkWZHBBcJ5hfJBLGkazBe2skZiL2VzU0SOZQ8ef01eUFMpih8H3vmJSqtvvKlmjSVAw==" length="5061887" />
+    </item>
+    <item>
       <title>8.1.2</title>
       <pubDate>Thu, 10 Sep 2026 14:36:20 +0000</pubDate>
       <sparkle:version>8.1.2</sparkle:version>
