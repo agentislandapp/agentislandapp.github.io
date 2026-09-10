@@ -8,6 +8,16 @@
          <item> block for each notarized DMG. Empty until the first release:
          Sparkle treats an empty channel as "you are up to date". -->
     <item>
+      <title>8.1.2</title>
+      <pubDate>Thu, 10 Sep 2026 14:36:20 +0000</pubDate>
+      <sparkle:version>8.1.2</sparkle:version>
+      <sparkle:shortVersionString>8.1.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p><strong>A visual tier you turn on.</strong> Settings &rarr; Appearance has a new "Rich visuals" switch, off by default. On, the island gains depth &mdash; each live agent a soft light in its own colour under glass, the one asking leading, an answer that washes across the card from the button you pressed; and the &#8997;P cockpit becomes an instrument, a lit row for whatever needs you. It is all Core Animation and runs only while a card is open, so idle costs what it always did.</p> <p><strong>Agent colours are neutral now, and yours to change.</strong> Each agent gets a muted colour and a plain glyph by default &mdash; no vendor's own colour or mark. A second switch restores the familiar colours if you want them.</p> <p><strong>Fixes.</strong> A permission prompt from Codex, Gemini or any non-Claude CLI now belongs to that CLI's own session instead of a phantom Claude one, so the card and the cockpit name the right tool. A session's todo list attaches to that session rather than to a guess. A second permission request queued behind the first can now be answered instead of waiting out its timeout. And your answer reaches the agent the instant you press, not when the card's animation finishes.</p>]]></description>
+      <enclosure url="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.2/AgentIsland-8.1.2.dmg"
+                 type="application/octet-stream" sparkle:edSignature="2kshRm5geY1Ux/2Jgcp/ooRU1uSNjMcejTt4woIoyazjsgsMYELmKMDKdM43znkhbOPwg9IqvHAMKa+EYzmHDg==" length="5738506" />
+    </item>
+    <item>
       <title>8.1.1</title>
       <pubDate>Thu, 10 Sep 2026 08:39:03 +0000</pubDate>
       <sparkle:version>8.1.1</sparkle:version>
