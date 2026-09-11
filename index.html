@@ -10,6 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://agentislandapp.github.io/hero.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#08090c">
 <link rel="canonical" href="https://agentislandapp.github.io/">
 <link rel="icon" href="icon.png">
 <!-- Structured data, inline like everything else here — nothing is fetched for
@@ -38,78 +39,247 @@
 }
 </script>
 <style>
-  /* Inline on purpose: no fonts, no frameworks, no trackers are fetched.
-     The site loads exactly one external script, Cloudflare Web Analytics,
-     which is cookieless and counts page views only — see privacy.html. */
+  /* Inline on purpose: no fonts, no frameworks, no trackers are fetched. The
+     only external script is Cloudflare Web Analytics (cookieless, page views
+     only — see privacy.html). The typeface is the system one (SF Pro on the
+     Macs this ships to), so it costs nothing and still reads as native. */
   :root {
-    --bg: #0a0a0c; --panel: #141418; --line: rgba(255,255,255,.09);
-    --text: #f5f5f7; --dim: rgba(245,245,247,.62); --faint: rgba(245,245,247,.38);
-    --accent: #e8825a; --green: #66bb6a;
+    --bg: #08090c;
+    --bg-soft: #0e1016;
+    --panel: rgba(255,255,255,.035);
+    --panel-2: rgba(255,255,255,.06);
+    --line: rgba(255,255,255,.08);
+    --line-2: rgba(255,255,255,.14);
+    --text: #f4f6f9;
+    --dim: rgba(244,246,249,.64);
+    --faint: rgba(244,246,249,.40);
+    --accent: #6ea8fe;      /* the icon's blue — the brand colour, not a vendor's */
+    --accent-ink: #06183a;
+    --warm: #e8825a;        /* the icon's mouth — a sparing highlight */
+    --green: #63d089;
+    --radius: 16px;
+    --maxw: 1080px;
+    --readw: 720px;
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
     margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
-  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
-  header { padding: 88px 0 64px; text-align: center; }
-  header img { width: 104px; height: 104px; }
-  h1 { font-size: 40px; line-height: 1.15; margin: 24px 0 12px; letter-spacing: -.02em; }
-  .tagline { font-size: 19px; color: var(--dim); margin: 0 auto 32px; max-width: 34em; }
-  .cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  /* Aurora: three fixed, blurred colour fields behind everything, in the icon's
+     own hues. Fixed + will-change-free; it is paint, not motion. */
+  .aurora { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .aurora::before, .aurora::after {
+    content: ""; position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5;
+  }
+  .aurora::before {
+    width: 760px; height: 620px; top: -260px; left: 50%; transform: translateX(-58%);
+    background: radial-gradient(closest-side, rgba(110,168,254,.30), transparent 70%);
+  }
+  .aurora::after {
+    width: 620px; height: 520px; top: 220px; right: -180px;
+    background: radial-gradient(closest-side, rgba(232,130,90,.16), transparent 70%);
+  }
+  .aurora i {
+    position: absolute; width: 560px; height: 460px; left: -160px; top: 640px;
+    border-radius: 50%; filter: blur(90px); opacity: .4;
+    background: radial-gradient(closest-side, rgba(99,208,137,.12), transparent 70%);
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  .col { max-width: var(--readw); }
+
+  /* ---------- top nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: saturate(140%) blur(14px); -webkit-backdrop-filter: saturate(140%) blur(14px);
+    background: rgba(8,9,12,.72); border-bottom: 1px solid transparent;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .nav.scrolled { border-bottom-color: var(--line); }
+  .nav .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; letter-spacing: -.01em; color: var(--text); }
+  .brand img { width: 28px; height: 28px; border-radius: 8px; }
+  .nav .spacer { flex: 1; }
+  .nav a.link { color: var(--dim); font-size: 14.5px; font-weight: 550; }
+  .nav a.link:hover { color: var(--text); text-decoration: none; }
+  .nav .btn { padding: 8px 16px; font-size: 14px; }
+  @media (max-width: 560px) { .nav a.link.hide-sm { display: none; } }
+
+  /* ---------- buttons ---------- */
   .btn {
-    display: inline-block; padding: 12px 22px; border-radius: 10px; text-decoration: none;
-    font-weight: 600; font-size: 15px; border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px;
+    border-radius: 12px; font-weight: 650; font-size: 15px; border: 1px solid transparent;
+    cursor: pointer; transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+    white-space: nowrap;
   }
-  .btn.primary { background: var(--accent); color: #1a0d07; }
-  .btn.ghost { border-color: var(--line); color: var(--text); }
-  .meta { color: var(--faint); font-size: 13px; margin-top: 14px; }
-  section { padding: 40px 0; border-top: 1px solid var(--line); }
-  h2 { font-size: 22px; margin: 0 0 20px; letter-spacing: -.01em; }
-  .feature { margin-bottom: 22px; }
-  .feature h3 { font-size: 16px; margin: 0 0 4px; }
-  .feature p { margin: 0; color: var(--dim); font-size: 15px; }
-  .scroll { overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 520px; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--faint); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
-  td.depth { white-space: nowrap; color: var(--dim); }
-  .tiers { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
-  @media (max-width: 640px) { .tiers { grid-template-columns: 1fr; } h1 { font-size: 32px; } }
-  .tier { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
-  .tier h3 { margin: 0 0 2px; font-size: 17px; }
-  .price { color: var(--faint); font-size: 14px; margin-bottom: 14px; }
-  .free-line { color: var(--green); font-weight: 600; }
-  /* The free tier is the strongest thing on this page, so its card is the one
-     that gets the accent border — the paid card is not the default answer. */
-  .tier.free { border-color: rgba(102,187,106,.42); }
-  .tier.free .price { color: var(--green); font-weight: 600; font-size: 15px; }
-  .tier ul { margin: 0; padding-left: 18px; color: var(--dim); font-size: 14.5px; }
-  .tier li { margin-bottom: 6px; }
+  .btn.primary {
+    background: linear-gradient(180deg, #86baff, var(--accent));
+    color: var(--accent-ink);
+    box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 8px 24px -8px rgba(110,168,254,.7);
+  }
+  .btn.primary:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 12px 30px -8px rgba(110,168,254,.85); text-decoration: none; }
+  .btn.ghost { border-color: var(--line-2); color: var(--text); background: var(--panel); }
+  .btn.ghost:hover { border-color: var(--dim); background: var(--panel-2); text-decoration: none; }
+  @media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
+
+  /* ---------- hero ---------- */
+  header.hero { text-align: center; padding: 76px 0 44px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 26px;
+    padding: 6px 14px 6px 8px; border-radius: 99px; border: 1px solid var(--line-2);
+    background: var(--panel); color: var(--dim); font-size: 13px; font-weight: 550;
+  }
+  .badge img { width: 20px; height: 20px; border-radius: 6px; }
+  h1 {
+    font-size: clamp(34px, 6vw, 58px); line-height: 1.06; margin: 0 auto 20px;
+    letter-spacing: -.03em; max-width: 15ch; font-weight: 700;
+    background: linear-gradient(180deg, #ffffff, #c7cede);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .tagline { font-size: clamp(17px, 2.2vw, 20px); color: var(--dim); margin: 0 auto 30px; max-width: 42ch; }
+  .cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .trust { margin-top: 26px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .trust .meta { color: var(--faint); font-size: 13px; margin: 0; }
+  .trust code { font-size: 12.5px; }
+  .free-line { color: var(--green); font-weight: 600; font-size: 14px; }
+  code {
+    background: rgba(255,255,255,.06); padding: 2px 7px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px;
+    border: 1px solid var(--line);
+  }
+
+  /* ---------- media frames ---------- */
+  .showcase { margin: 8px auto 0; max-width: 960px; position: relative; }
+  .frame {
+    position: relative; border-radius: 20px; overflow: hidden;
+    border: 1px solid var(--line-2);
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,.8), 0 2px 0 rgba(255,255,255,.06) inset;
+  }
+  .frame img, .frame video { width: 100%; height: auto; display: block; }
+  figure.shot { margin: 0; }
+  figcaption { color: var(--faint); font-size: 13.5px; text-align: center; margin-top: 14px; }
+
+  /* ---------- sections ---------- */
+  section { padding: 72px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  .eyebrow {
+    display: inline-block; font-size: 12.5px; font-weight: 650; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+  }
+  h2 { font-size: clamp(24px, 3.4vw, 32px); margin: 0 0 14px; letter-spacing: -.02em; font-weight: 680; }
+  .lede { color: var(--dim); font-size: 17px; margin: 0 0 32px; max-width: 52ch; }
+
+  /* ---------- feature grid ---------- */
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
+    transition: border-color .2s ease, transform .12s ease;
+  }
+  .card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) { .card:hover { transform: none; } }
+  .card .ic {
+    width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center;
+    background: rgba(110,168,254,.14); border: 1px solid rgba(110,168,254,.28); margin-bottom: 16px;
+  }
+  .card .ic svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
+  .card h3 { font-size: 16.5px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .card p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.6; }
+
+  /* ---------- CLI badges ---------- */
+  .cli-block { margin-top: 8px; display: grid; gap: 14px; }
+  .cli-row {
+    display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: start;
+    padding: 18px; border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--panel);
+  }
+  @media (max-width: 640px) { .cli-row { grid-template-columns: 1fr; gap: 8px; } }
+  .cli-row .k { color: var(--text); font-weight: 600; font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
+  .cli-row.ok .dot { color: var(--green); }
+  .cli-row .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 13px; color: var(--dim); padding: 5px 11px; border-radius: 99px;
+    border: 1px solid var(--line-2); background: rgba(255,255,255,.03);
+  }
+  .cli-row.ok .pill { color: var(--text); }
   .note { color: var(--faint); font-size: 14px; }
-  .hook {
-    margin: 34px auto 0; max-width: 30em; text-align: left;
-    background: var(--panel); border: 1px solid var(--line);
-    border-left: 3px solid var(--accent); border-radius: 12px; padding: 16px 18px;
-    color: var(--dim); font-size: 14.5px;
+  .note + .note { margin-top: 10px; }
+
+  /* ---------- pricing ---------- */
+  .tiers { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 720px) { .tiers { grid-template-columns: 1fr; } }
+  .tier {
+    position: relative; border: 1px solid var(--line); border-radius: 20px; padding: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
   }
-  .hook strong { color: var(--text); }
-  .hook .meta { margin-top: 8px; }
-  .tier .btn { margin-top: 16px; padding: 10px 18px; font-size: 14px; }
-  .tier .btn.primary { display: block; text-align: center; }
-  code { background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 5px; font-size: 13.5px; }
-  footer { padding: 40px 0 64px; border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
+  .tier.free { border-color: rgba(99,208,137,.42); box-shadow: 0 0 0 1px rgba(99,208,137,.12), 0 30px 60px -40px rgba(99,208,137,.5); }
+  .tier .tag {
+    position: absolute; top: 20px; right: 20px; font-size: 11.5px; font-weight: 650;
+    letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px;
+  }
+  .tier.free .tag { color: var(--green); background: rgba(99,208,137,.14); border: 1px solid rgba(99,208,137,.3); }
+  .tier.pro .tag { color: var(--accent); background: rgba(110,168,254,.14); border: 1px solid rgba(110,168,254,.3); }
+  .tier h3 { margin: 0 0 4px; font-size: 20px; letter-spacing: -.01em; }
+  .price { font-size: 15px; margin-bottom: 20px; }
+  .price .big { font-size: 34px; font-weight: 720; letter-spacing: -.02em; color: var(--text); display: block; line-height: 1.1; margin-bottom: 2px; }
+  .tier.free .price .big { color: var(--green); }
+  .tier ul { margin: 0 0 4px; padding: 0; list-style: none; }
+  .tier li { position: relative; padding-left: 26px; margin-bottom: 11px; color: var(--dim); font-size: 14.5px; line-height: 1.55; }
+  .tier li::before {
+    content: ""; position: absolute; left: 0; top: 7px; width: 15px; height: 9px;
+    border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+    transform: rotate(-45deg); border-radius: 1px;
+  }
+  .tier.free li::before { border-color: var(--green); }
+  .tier li strong { color: var(--text); font-weight: 600; }
+  .tier .btn { margin-top: 20px; width: 100%; justify-content: center; }
+
+  /* ---------- callout / business ---------- */
+  .callout {
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 14px; padding: 20px 22px;
+    background: linear-gradient(180deg, rgba(110,168,254,.06), rgba(255,255,255,.02));
+  }
+  .callout strong { color: var(--text); }
+  .callout p { margin: 0; color: var(--dim); font-size: 15px; }
+  .callout .meta { margin-top: 10px; color: var(--faint); font-size: 13.5px; }
+  .prose p { color: var(--dim); font-size: 15px; }
+  .prose p strong { color: var(--text); }
+  .prose p + p { margin-top: 14px; }
+
+  /* ---------- FAQ ---------- */
+  details.q {
+    border-bottom: 1px solid var(--line); padding: 4px 0;
+  }
+  details.q summary {
+    list-style: none; cursor: pointer; padding: 16px 40px 16px 2px; position: relative;
+    font-size: 16px; font-weight: 600; color: var(--text);
+  }
+  details.q summary::-webkit-details-marker { display: none; }
+  details.q summary::after {
+    content: ""; position: absolute; right: 6px; top: 22px; width: 9px; height: 9px;
+    border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint);
+    transform: rotate(45deg); transition: transform .2s ease;
+  }
+  details.q[open] summary::after { transform: rotate(-135deg); }
+  details.q .a { padding: 0 40px 18px 2px; color: var(--dim); font-size: 14.5px; line-height: 1.7; }
+
+  /* ---------- footer ---------- */
+  footer { padding: 48px 0 72px; border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
+  footer .wrap { display: flex; flex-direction: column; gap: 10px; }
   footer a { color: var(--dim); }
-  a { color: var(--accent); }
-  .shot { margin: 0 0 8px; }
-  .shot img, .shot video {
-    width: 100%; height: auto; display: block; border-radius: 14px;
-    border: 1px solid var(--line); background: #0a0a0c;
-  }
-  .shot figcaption {
-    color: var(--faint); font-size: 13.5px; text-align: center; margin-top: 12px;
-  }
+  .footrow { display: flex; gap: 10px 18px; flex-wrap: wrap; align-items: center; }
+  .footrow .brand { font-size: 15px; }
 </style>
 <!-- Cloudflare Web Analytics. Cookieless: no cookie is set, no visitor
      identifier is stored, nothing is shared with an ad network. It answers one
@@ -119,227 +289,287 @@
         data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
 </head>
 <body>
-<div class="wrap">
+<div class="aurora"><i></i></div>
 
-<header>
-  <img src="icon.png" alt="AgentIsland">
-  <h1>Three agents running.<br>One place to see which needs you.</h1>
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="">AgentIsland</a>
+    <span class="spacer"></span>
+    <a class="link hide-sm" href="#what">Features</a>
+    <a class="link hide-sm" href="#clis">CLIs</a>
+    <a class="link" href="#pricing">Pricing</a>
+    <a class="btn primary" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.3/AgentIsland-8.1.3.dmg">Download</a>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+
+<header class="hero">
+  <span class="badge"><img src="icon.png" alt="">Native macOS · no account · no telemetry</span>
+  <h1>Three agents running. One place to see which needs you.</h1>
   <p class="tagline">When Claude Code stops to ask permission, the request appears at the top of your screen &mdash; answer it there and the agent carries on. Run several at once and they all report to the same place, so no session sits blocked while you are looking at a different terminal tab.</p>
   <div class="cta">
     <a class="btn primary" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.3/AgentIsland-8.1.3.dmg">Download for macOS</a>
     <a class="btn ghost" href="#pricing">See pricing</a>
   </div>
-  <p class="meta">Native macOS · Developer ID signed and notarized · no account, no telemetry</p>
-  <p class="meta">macOS 14+ · Apple silicon and Intel · works with or without a real notch</p>
-  <p class="meta">or <code>brew install --cask agentislandapp/tap/agentisland</code></p>
-  <!-- Stated this high on the page because it is the objection that stops
-       people before any feature does: whether the free tier is a countdown.
-       It is not one, and saying so is worth more than shaving the price. -->
-  <p class="meta free-line">Free forever, not a trial &mdash; no time limit, no card, no account.</p>
+  <div class="trust">
+    <p class="meta">Developer ID signed and notarized · macOS 14+ · Apple silicon and Intel · works with or without a real notch</p>
+    <p class="meta">or <code>brew install --cask agentislandapp/tap/agentisland</code></p>
+    <!-- Stated this high because it is the objection that stops people before
+         any feature does: whether the free tier is a countdown. It is not. -->
+    <p class="free-line">Free forever, not a trial &mdash; no time limit, no card, no account.</p>
+  </div>
 </header>
 
-<figure class="shot">
-  <!-- A real recording of the running app, not an animation: the card arrives,
-       the countdown runs while the CLI waits, and nothing else moves. Poster
-       frame is a still from the same clip, so the layout never shifts. -->
-  <video src="demo.mp4" poster="demo-poster.png" autoplay muted loop playsinline
-         aria-label="A permission request appearing at the top of the screen while Claude Code waits."></video>
+<div class="showcase">
+  <figure class="shot frame">
+    <!-- A real recording of the running app, not an animation: the card arrives,
+         the countdown runs while the CLI waits, and nothing else moves. -->
+    <video src="demo.mp4" poster="demo-poster.png" autoplay muted loop playsinline
+           aria-label="A permission request appearing at the top of the screen while Claude Code waits."></video>
+  </figure>
   <figcaption>A real permission request, answered without leaving what you were doing.</figcaption>
-</figure>
-
-<figure class="shot" style="margin-top:28px">
-  <img src="hero.png" alt="The permission card in place at the top of the screen, showing the project, the command npm run build &amp;&amp; npm test, and Deny / Allow buttons with a countdown.">
-</figure>
-
-<!-- The business model sits AFTER the demo on purpose. It used to be the last
-     thing in the header, which meant a first-time visitor read the words "ad
-     business" before ever seeing what the app does. Proof first, then the
-     money question. -->
-<div class="hook">
-  <strong>Free, paid for by one sponsored line. Or $49 once, and never see one.</strong>
-  The free tier is not a trial and does not expire &mdash; it is funded by a single
-  sponsored line that appears only when nothing is running and nothing is waiting on
-  you, at most once every four hours. Pro gives you a switch to turn it off and puts every
-  session in view at once, with the cockpit and the other CLIs. One payment, no subscription.
-  <div class="meta">No sponsor runs today. The switch and the machinery exist; it starts once enough people use the app for a sponsor to buy the slot.</div>
 </div>
 
-<section>
-  <h2>What it does</h2>
-  <div class="feature">
-    <h3>Answer permission prompts without switching apps</h3>
-    <p>The card shows the tool, the command, and a red/green diff for edits. Allow or deny with a click, or ⌥↩ and ⌥N from any app.</p>
-  </div>
-  <div class="feature">
-    <h3>See every session at a glance</h3>
-    <p>One dot per running session, tinted by which CLI it is, with a context-usage ring and a todo count. Nothing else, until something needs you.</p>
-  </div>
-  <div class="feature">
-    <h3>Reply from anywhere</h3>
-    <p>⌥Space opens a composer aimed at whichever session most needs you. Type or dictate; it is delivered through tmux, or typed into the terminal for you.</p>
-  </div>
-  <div class="feature">
-    <h3>Know what it costs</h3>
-    <p>Live model, context percentage and spend per session — and a history of what each project actually cost you this week.</p>
-  </div>
-</section>
+</div><!-- /wrap -->
 
-<figure class="shot" style="margin-top:28px">
-  <!-- The paid feature, photographed rather than described. Until 9 Sep both
-       visual assets on this page showed the permission card, which is free, so
-       the page demonstrated the free product and asked the reader to imagine
-       the paid one. Real screenshot of the real app; the project names are
-       invented because three agents do not block on cue. -->
-  <img src="cockpit.png" alt="Several sessions listed under one permission card: payments-api asking to run npx prisma migrate deploy with Deny and Allow, a plus-one-waiting badge and a countdown, and beneath it storefront-web, infra-terraform and two idle sessions with what each is doing.">
-  <figcaption>One request answered here, and every other session in view underneath it &mdash; including the second one already waiting.</figcaption>
-</figure>
-
-<section>
-  <h2>Twelve CLIs, answered from the same place</h2>
-  <p class="note" style="margin-top:-8px;margin-bottom:18px">Depth differs per tool, so it is stated per tool. The app says the same thing in its own Settings rather than implying more than it does &mdash; and where a tool cannot do something, this table says that too.</p>
-  <div class="scroll">
-  <table>
-    <tr><th>What you get</th><th>Tools</th></tr>
-    <tr><td class="depth">Answer the prompt here</td><td>Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp, OpenCode (including OpenCode Zen)</td></tr>
-    <tr><td class="depth">Status only</td><td>Aider, iFlow &mdash; neither lets an outside program answer a prompt, so theirs stay in the terminal</td></tr>
-    <tr><td class="depth">Needs one step from you</td><td>DeepSeek (dsh) &mdash; it can run our hooks through its Claude Code bridge, but you mount that bridge yourself</td></tr>
-  </table>
-  </div>
-  <p class="note">Each of those was checked against that tool's own documentation in September 2026, not assumed from a family resemblance. Several of them added blocking hooks recently enough that most integrations have not noticed.</p>
-  <p class="note">GLM/Zhipu setups run the real <code>claude</code> binary, so they work through the Claude Code integration.</p>
-</section>
-
-<section>
-  <h2>The cockpit, when one session isn't the whole story</h2>
-  <p class="note" style="margin-top:-8px;margin-bottom:18px">⌥P opens the console: every live session on one screen, one row each, columns that stay put whether or not a session has anything to put in them.</p>
-  <div class="feature">
-    <h3>Answer a permission in the row it belongs to</h3>
-    <p>A session asking for something tints its row and grows a line with the command, the countdown, and Deny/Allow. Several agents can be asking at once; you see all of them, not one at a time.</p>
-  </div>
-  <div class="feature">
-    <h3>Drive it without the mouse</h3>
-    <p>⌥↑ and ⌥↓ move between rows, ⌥↩ allows or opens a composer, ⌥N denies, ⌥S stops. The keys are printed along the bottom, and they change with what the selected row can actually do.</p>
-  </div>
-  <div class="feature">
-    <h3>Read the fleet in one line</h3>
-    <p>The header says what is waiting on you, what is running and what it has cost; the footer reports the day. Whatever needs an answer sorts to the top, and past five sessions the rows group under their project with a subtotal each.</p>
-  </div>
-  <p class="note">Cost is never invented: it is whatever the CLI reports about itself. Claude Code and OpenCode report one; the rest do not, and their rows say so rather than printing $0.00.</p>
-</section>
-
-<section>
-  <h2 id="pricing">Pricing</h2>
-  <div class="tiers">
-    <div class="tier free">
-      <h3>Free</h3>
-      <div class="price">$0 — forever, not a trial</div>
-      <ul>
-        <li><strong>Permission, question and plan cards — unlimited, from every session you run.</strong> No daily cap, no countdown, no card on file</li>
-        <li>One session listed at a time &mdash; the one that most needs you</li>
-        <li>Claude Code</li>
-        <li>Sponsored by one occasional line, which is what pays for it</li>
-      </ul>
-      <p class="note" style="margin-top:12px">The part that saves you the context switch is not the paid part, and it is not rationed either: if a second session stops to ask you something, you still get the card and can still answer it here. What Free does not do is <em>show you all of them at once</em> &mdash; the list holds one. Nothing expires and nothing starts asking.</p>
-      <a class="btn ghost" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.3/AgentIsland-8.1.3.dmg">Download</a>
-    </div>
-    <div class="tier">
-      <h3>Pro</h3>
-      <div class="price">$49 once — no subscription</div>
-      <ul>
-        <li>For running several agents at once &mdash; everything below is about that</li>
-        <li>Every session <em>in view</em> at once, not one at a time</li>
-        <li>The cockpit (⌥P) — every session on one screen, answered from the keyboard</li>
-        <li>Usage history and cost per project</li>
-        <li>Voice messages</li>
-        <li>Every supported CLI</li>
-        <li>A switch to turn the sponsored line off</li>
-      </ul>
-      <a class="btn primary" href="https://buy.polar.sh/polar_cl_zCyTuukP3KUsKxvVtbd5gGF0OYiKOyY5764sC3DrdRM">Buy Pro</a>
+<!-- The business model sits AFTER the demo on purpose: a first-time visitor
+     should see what the app does before the word "sponsored". -->
+<section id="what">
+  <div class="wrap">
+    <span class="eyebrow">What it does</span>
+    <h2>The blocked session finds you, not the other way around.</h2>
+    <p class="lede">Four things, and nothing you have to configure to get them.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <h3>Answer prompts without switching apps</h3>
+        <p>The card shows the tool, the command, and a red/green diff for edits. Allow or deny with a click, or ⌥↩ and ⌥N from any app.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>See every session at a glance</h3>
+        <p>One dot per running session, tinted by which CLI it is, with a context-usage ring and a todo count. Nothing else, until something needs you.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 3z"/></svg></div>
+        <h3>Reply from anywhere</h3>
+        <p>⌥Space opens a composer aimed at whichever session most needs you. Type or dictate; it is delivered through tmux, or typed into the terminal for you.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg></div>
+        <h3>Know what it costs</h3>
+        <p>Live model, context percentage and spend per session &mdash; and a history of what each project actually cost you this week.</p>
+      </div>
     </div>
   </div>
-  <p class="note" style="margin-top:18px">Payment is handled by Polar, which is the merchant of record and charges in USD with tax included. You get a licence key by email; the same download becomes Pro once you paste the key into Settings &rarr; Licence. One licence covers three Macs and can be moved between them. If it does not fit the way you work, ask for a refund within 14 days and you'll get one &mdash; you do not have to argue that the app is broken &mdash; write to <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>.</p>
 </section>
 
 <section>
-  <h2>Where the money comes from</h2>
-  <p class="note">Every app this size eventually has to answer this, and a plan you only learn about
-  on the day it ships is not a plan, it is a surprise. So: two lines, and no third one.</p>
-  <p class="note" style="margin-top:12px"><strong>One payment, or one sponsored line.</strong>
-  Pro is $49 once &mdash; not a subscription, not a renewal, not a licence that stops working next
-  year. The free tier is paid for the other way: an occasional sponsored line, from a named sponsor
-  who bought the slot directly. That is the whole business. There is no third revenue line hiding
-  in the app, and there is nothing to sell about you, because nothing about you leaves the machine.</p>
-  <p class="note" style="margin-top:12px"><strong>Nothing is running yet.</strong> There is no
-  advertising in AgentIsland today and nothing has been shown to anyone. What exists already is the
-  machinery and the switch. <strong>We are going to run it</strong> &mdash; a stated intention, not
-  a maybe &mdash; once there are enough people using the app for a sponsor's money to be worth
-  asking for.</p>
-  <p class="note" style="margin-top:12px"><strong>Buying the app turns them off.</strong> That is
-  what the $49 buys, alongside the features: a switch in Settings that ends sponsors for good, with
-  no reminders afterwards. On the free tier there is no such switch, and saying so plainly is
-  better than a greyed-out control that looks broken.</p>
-  <p class="note" style="margin-top:12px"><strong>Nobody is paid to look at them.</strong> An earlier
-  version of this page promised the opposite &mdash; that sponsor money would come back to you as
-  credit. It was built and then removed, because paying people per impression is what ad networks
-  call invalid traffic, and a business that has to police its own users for fraud is a worse deal
-  for everyone than a cheaper app. So the slot earns you nothing, and it is honest about that.</p>
-  <p class="note" style="margin-top:12px"><strong>And it stays out of the way.</strong> One sponsored
-  line beneath your own sessions. Never over a permission request, never while an agent is working,
-  at most once every four hours, and dismissing one buys a full day of quiet. If it could appear in
-  the moment an agent needs you, it would have deleted the reason the app exists &mdash; so it
-  cannot.</p>
+  <div class="wrap">
+    <span class="eyebrow">The cockpit &middot; ⌥P</span>
+    <h2>When one session isn't the whole story.</h2>
+    <p class="lede">Every live session on one screen, one row each &mdash; whatever needs an answer sorts to the top, and the one that's asking answers right where it sits.</p>
+    <div class="showcase">
+      <figure class="shot frame">
+        <!-- The paid feature, photographed rather than described. Real screenshot
+             of the real app; the project names are invented because three agents
+             do not block on cue. -->
+        <img src="cockpit.png" alt="Several sessions listed under one permission card: payments-api asking to run npx prisma migrate deploy with Deny and Allow, a plus-one-waiting badge and a countdown, and beneath it storefront-web, infra-terraform and two idle sessions with what each is doing.">
+      </figure>
+      <figcaption>One request answered here, and every other session in view underneath it &mdash; including the second one already waiting.</figcaption>
+    </div>
+    <div class="grid" style="margin-top:36px">
+      <div class="card">
+        <h3>Answer a permission in the row it belongs to</h3>
+        <p>A session asking for something tints its row and grows a line with the command, the countdown, and Deny/Allow. Several agents can be asking at once; you see all of them, not one at a time.</p>
+      </div>
+      <div class="card">
+        <h3>Drive it without the mouse</h3>
+        <p>⌥↑ and ⌥↓ move between rows, ⌥↩ allows or opens a composer, ⌥N denies, ⌥S stops. The keys are printed along the bottom, and change with what the selected row can do.</p>
+      </div>
+      <div class="card">
+        <h3>Read the fleet in one line</h3>
+        <p>The header says what is waiting on you, what is running and what it has cost; the footer reports the day. Past five sessions the rows group under their project with a subtotal each.</p>
+      </div>
+      <div class="card">
+        <h3>Cost that is never invented</h3>
+        <p>It is whatever the CLI reports about itself. Claude Code and OpenCode report one; the rest do not, and their rows say so rather than printing $0.00.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="clis">
+  <div class="wrap">
+    <span class="eyebrow">Compatibility</span>
+    <h2>Twelve CLIs, answered from the same place.</h2>
+    <p class="lede">Depth differs per tool, so it is stated per tool &mdash; the app says the same thing in its own Settings rather than implying more than it does.</p>
+    <div class="cli-block">
+      <div class="cli-row ok">
+        <div class="k"><span class="dot"></span>Answer the prompt here</div>
+        <div class="pills">
+          <span class="pill">Claude Code</span><span class="pill">Codex</span><span class="pill">Cursor</span>
+          <span class="pill">Gemini CLI</span><span class="pill">Crush</span><span class="pill">Qwen Code</span>
+          <span class="pill">Factory Droid</span><span class="pill">Kimi</span><span class="pill">Cline</span>
+          <span class="pill">Goose</span><span class="pill">Amp</span><span class="pill">OpenCode</span>
+        </div>
+      </div>
+      <div class="cli-row">
+        <div class="k"><span class="dot" style="color:var(--faint)"></span>Status only</div>
+        <div class="pills">
+          <span class="pill">Aider</span><span class="pill">iFlow</span>
+          <span class="pill" style="border-style:dashed">neither lets an outside program answer a prompt</span>
+        </div>
+      </div>
+      <div class="cli-row">
+        <div class="k"><span class="dot" style="color:var(--warm)"></span>Needs one step from you</div>
+        <div class="pills">
+          <span class="pill">DeepSeek (dsh)</span>
+          <span class="pill" style="border-style:dashed">runs our hooks through its Claude Code bridge, which you mount</span>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:18px">Each was checked against that tool's own documentation in September 2026, not assumed from a family resemblance. Several added blocking hooks recently enough that most integrations have not noticed. GLM/Zhipu setups run the real <code>claude</code> binary, so they work through the Claude Code integration.</p>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <span class="eyebrow">Pricing</span>
+    <h2>Free forever. Pro is one payment.</h2>
+    <p class="lede">The part that saves you the context switch is the free part &mdash; and it is not rationed. Pro is for running several agents at once.</p>
+    <div class="tiers">
+      <div class="tier free">
+        <span class="tag">Free forever</span>
+        <h3>Free</h3>
+        <div class="price"><span class="big">$0</span>not a trial &mdash; no card, no account</div>
+        <ul>
+          <li><strong>Permission, question and plan cards &mdash; unlimited, from every session you run.</strong> No daily cap, no countdown</li>
+          <li>One session listed at a time &mdash; the one that most needs you</li>
+          <li>Claude Code</li>
+          <li>Sponsored by one occasional line, which is what pays for it</li>
+        </ul>
+        <p class="note" style="margin-top:14px">If a second session stops to ask you something, you still get the card and can still answer it here. What Free doesn't do is <em>show you all of them at once</em>. Nothing expires and nothing starts asking.</p>
+        <a class="btn ghost" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.3/AgentIsland-8.1.3.dmg">Download free</a>
+      </div>
+      <div class="tier pro">
+        <span class="tag">One-time</span>
+        <h3>Pro</h3>
+        <div class="price"><span class="big">$49</span>once &mdash; no subscription, ever</div>
+        <ul>
+          <li>Every session <em>in view</em> at once, not one at a time</li>
+          <li>The cockpit (⌥P) &mdash; every session on one screen, answered from the keyboard</li>
+          <li>Usage history and cost per project</li>
+          <li>Voice messages</li>
+          <li>Every supported CLI</li>
+          <li>A switch to turn the sponsored line off</li>
+        </ul>
+        <p class="note" style="margin-top:14px">One licence covers three Macs and can be moved between them.</p>
+        <a class="btn primary" href="https://buy.polar.sh/polar_cl_zCyTuukP3KUsKxvVtbd5gGF0OYiKOyY5764sC3DrdRM">Buy Pro &mdash; $49</a>
+      </div>
+    </div>
+    <p class="note" style="margin-top:20px">Payment is handled by Polar, the merchant of record, in USD with tax included. You get a licence key by email; the same download becomes Pro once you paste the key into Settings &rarr; Licence. If it does not fit the way you work, ask for a refund within 14 days and you'll get one &mdash; you do not have to argue that the app is broken &mdash; write to <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>.</p>
+  </div>
 </section>
 
 <section>
-  <h2>Your machine stays yours</h2>
-  <p class="note">Everything runs locally. There is no account to create, and no telemetry unless you switch it on — in which case Settings prints the exact list of what would be sent, next to the switch. Prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere, under any setting. That is the app. This website counts page views with Cloudflare Web Analytics, which sets no cookie and cannot tell who you are; <a href="privacy.html">the privacy page</a> lists exactly what it records.</p>
-  <p class="note">Every file the app writes to your home directory is named in the interface before you agree to it, backed up once before the first edit, and restored when you remove the integration — including your own <code>statusLine</code>.</p>
+  <div class="wrap col">
+    <span class="eyebrow">The business, in full</span>
+    <h2>Where the money comes from.</h2>
+    <div class="callout" style="margin-bottom:24px">
+      <p><strong>Free, paid for by one sponsored line. Or $49 once, and never see one.</strong> The free tier is not a trial and does not expire &mdash; it is funded by a single sponsored line that appears only when nothing is running and nothing is waiting on you, at most once every four hours. Pro gives you a switch to turn it off.</p>
+      <div class="meta">No sponsor runs today. The switch and the machinery exist; it starts once enough people use the app for a sponsor to buy the slot.</div>
+    </div>
+    <div class="prose">
+      <p>Every app this size eventually has to answer this, and a plan you only learn about on the day it ships is not a plan, it is a surprise. So: two lines, and no third one.</p>
+      <p><strong>One payment, or one sponsored line.</strong> Pro is $49 once &mdash; not a subscription, not a renewal, not a licence that stops working next year. The free tier is paid for the other way: an occasional sponsored line, from a named sponsor who bought the slot directly. That is the whole business. There is no third revenue line hiding in the app, and there is nothing to sell about you, because nothing about you leaves the machine.</p>
+      <p><strong>Nothing is running yet.</strong> There is no advertising in AgentIsland today and nothing has been shown to anyone. What exists already is the machinery and the switch. <strong>We are going to run it</strong> &mdash; a stated intention, not a maybe &mdash; once there are enough people using the app for a sponsor's money to be worth asking for.</p>
+      <p><strong>Nobody is paid to look at them.</strong> An earlier version of this page promised the opposite &mdash; that sponsor money would come back to you as credit. It was built and then removed, because paying people per impression is what ad networks call invalid traffic, and a business that has to police its own users for fraud is a worse deal for everyone than a cheaper app.</p>
+      <p><strong>And it stays out of the way.</strong> One sponsored line beneath your own sessions. Never over a permission request, never while an agent is working, at most once every four hours, and dismissing one buys a full day of quiet. If it could appear in the moment an agent needs you, it would have deleted the reason the app exists &mdash; so it cannot.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap col">
+    <span class="eyebrow">Privacy</span>
+    <h2>Your machine stays yours.</h2>
+    <div class="prose">
+      <p>Everything runs locally. There is no account to create, and no telemetry unless you switch it on &mdash; in which case Settings prints the exact list of what would be sent, next to the switch. Prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere, under any setting.</p>
+      <p>Every file the app writes to your home directory is named in the interface before you agree to it, backed up once before the first edit, and restored when you remove the integration &mdash; including your own <code>statusLine</code>.</p>
+      <p>This website counts page views with Cloudflare Web Analytics, which sets no cookie and cannot tell who you are; <a href="privacy.html">the privacy page</a> lists exactly what it records.</p>
+    </div>
+  </div>
 </section>
 
 <!-- These are the questions people actually type before they know this app
-     exists, which is why they are phrased as questions rather than as feature
-     headings. Every answer is one someone would want even if they never
-     searched for it — a FAQ written for a crawler and useless to a reader is
-     the version that ages badly. -->
+     exists, which is why they are phrased as questions. -->
 <section>
-  <h2>Questions</h2>
+  <div class="wrap col">
+    <span class="eyebrow">Questions</span>
+    <h2>The things people ask first.</h2>
 
-  <h3>How do I know when Claude Code is waiting for me?</h3>
-  <p class="note">That is the whole point of this app. Claude Code stops on a permission request and waits silently, which you often notice minutes later. AgentIsland puts the request at the top of your screen the moment it fires, with a counter showing how long the CLI has been blocked.</p>
-
-  <h3>Can I answer a permission prompt without switching windows?</h3>
-  <p class="note">Yes. The card carries the command and Deny/Allow, so you answer from whatever app you are in and the agent carries on. ⌥↩ allows and ⌥N denies from the keyboard, anywhere.</p>
-
-  <h3>Does it work on a Mac without a notch?</h3>
-  <p class="note">Yes. On a Mac or an external display without a physical notch the app draws its own island in the same place, so it behaves identically.</p>
-
-  <h3>Which coding agents does it work with?</h3>
-  <p class="note">Twelve of fifteen let you answer the prompt in the island: Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp and OpenCode. Aider and iFlow report status only, because neither lets an outside program answer a prompt. DeepSeek can run our hooks through its own Claude Code bridge once you mount it. The table above states the depth per tool rather than implying more.</p>
-
-  <h3>Is it free?</h3>
-  <p class="note">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, for as long as you use it, and they are never rationed by session &mdash; if a second Claude Code session stops to ask you something, the card still reaches you and you can still answer it. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once &mdash; no subscription &mdash; and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and gives you a switch to turn off the sponsored line that pays for the free tier &mdash; Pro sees it too unless you flip that switch in Settings. It is for people running several agents in parallel, not a gate on the basic thing.</p>
-
-  <h3>Why do my allow rules keep asking anyway?</h3>
-  <p class="note">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</p>
-
-  <h3>I wrote a Claude Code hook and it does nothing. Why?</h3>
-  <p class="note">Start with <code>claude --debug hooks</code>, which shows whether your hook is ever invoked and so splits a config problem from a script problem in one line. <a href="hooks.html">The rest is here</a>: the unquoted path with a space in it, the matcher that misses, and why a hook must fail open rather than exit non-zero.</p>
-
-  <h3>Why don't I get notified when Claude Code finishes?</h3>
-  <p class="note">Two reasons, usually. Claude Code only fires its notification when it thinks you are <em>away</em> from the terminal, so watching the window is a test designed to fail; and a desktop notification is sent by default only in Ghostty, Kitty and iTerm2 — everywhere else you need <code>"preferredNotifChannel": "terminal_bell"</code>. <a href="done.html">The settings, plus the traps</a> (tmux swallows it, iTerm2 needs forwarding switched on) — and why "done" turns out to be three states rather than one.</p>
-
-  <h3>Does it send my prompts or code anywhere?</h3>
-  <p class="note">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</p>
+    <details class="q" open>
+      <summary>How do I know when Claude Code is waiting for me?</summary>
+      <div class="a">That is the whole point of this app. Claude Code stops on a permission request and waits silently, which you often notice minutes later. AgentIsland puts the request at the top of your screen the moment it fires, with a counter showing how long the CLI has been blocked.</div>
+    </details>
+    <details class="q">
+      <summary>Can I answer a permission prompt without switching windows?</summary>
+      <div class="a">Yes. The card carries the command and Deny/Allow, so you answer from whatever app you are in and the agent carries on. ⌥↩ allows and ⌥N denies from the keyboard, anywhere.</div>
+    </details>
+    <details class="q">
+      <summary>Does it work on a Mac without a notch?</summary>
+      <div class="a">Yes. On a Mac or an external display without a physical notch the app draws its own island in the same place, so it behaves identically.</div>
+    </details>
+    <details class="q">
+      <summary>Which coding agents does it work with?</summary>
+      <div class="a">Twelve of fifteen let you answer the prompt in the island: Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp and OpenCode. Aider and iFlow report status only, because neither lets an outside program answer a prompt. DeepSeek can run our hooks through its own Claude Code bridge once you mount it.</div>
+    </details>
+    <details class="q">
+      <summary>Is it free?</summary>
+      <div class="a">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, and never rationed by session &mdash; if a second Claude Code session stops to ask you something, the card still reaches you. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and gives you a switch to turn off the sponsored line.</div>
+    </details>
+    <details class="q">
+      <summary>Why do my allow rules keep asking anyway?</summary>
+      <div class="a">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</div>
+    </details>
+    <details class="q">
+      <summary>I wrote a Claude Code hook and it does nothing. Why?</summary>
+      <div class="a">Start with <code>claude --debug hooks</code>, which shows whether your hook is ever invoked and so splits a config problem from a script problem in one line. <a href="hooks.html">The rest is here</a>: the unquoted path with a space in it, the matcher that misses, and why a hook must fail open rather than exit non-zero.</div>
+    </details>
+    <details class="q">
+      <summary>Why don't I get notified when Claude Code finishes?</summary>
+      <div class="a">Two reasons, usually. Claude Code only fires its notification when it thinks you are <em>away</em> from the terminal, so watching the window is a test designed to fail; and a desktop notification is sent by default only in Ghostty, Kitty and iTerm2 &mdash; everywhere else you need <code>"preferredNotifChannel": "terminal_bell"</code>. <a href="done.html">The settings, plus the traps</a> &mdash; and why "done" turns out to be three states rather than one.</div>
+    </details>
+    <details class="q">
+      <summary>Does it send my prompts or code anywhere?</summary>
+      <div class="a">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</div>
+    </details>
+  </div>
 </section>
 
 <footer>
-  <p><a href="privacy.html">Privacy</a> · <a href="eula.html">Licence agreement</a> · <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">Report an issue</a></p>
-  <p>Support, billing and refunds: <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>. AgentIsland is made by Tiki Studios.</p>
-  <p>Not affiliated with Anthropic, Google, OpenAI, Moonshot, Alibaba or Charm. Product names are their owners'.</p>
+  <div class="wrap">
+    <div class="footrow"><a class="brand" href="#top"><img src="icon.png" alt="" style="width:24px;height:24px;border-radius:7px">AgentIsland</a></div>
+    <div class="footrow">
+      <a href="privacy.html">Privacy</a> · <a href="eula.html">Licence agreement</a> · <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">Report an issue</a>
+    </div>
+    <p>Support, billing and refunds: <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>. AgentIsland is made by Tiki Studios.</p>
+    <p>Not affiliated with Anthropic, Google, OpenAI, Moonshot, Alibaba or Charm. Product names are their owners'.</p>
+  </div>
 </footer>
 
-</div>
 <script>
+/* Sticky-nav hairline on scroll. Pure cosmetic; no layout, no fetch. */
+(function () {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
 /* Counts Download clicks. The buttons are still direct links to the DMG, so a
    click starts the file transfer and never navigates — which is also why there
    is no page load to count, and why Cloudflare Web Analytics (no custom events)
