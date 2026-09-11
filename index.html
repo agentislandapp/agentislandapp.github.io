@@ -10,7 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://agentislandapp.github.io/hero.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#08090c">
+<meta name="theme-color" content="#06070a">
 <link rel="canonical" href="https://agentislandapp.github.io/">
 <link rel="icon" href="icon.png">
 <!-- Structured data, inline like everything else here — nothing is fetched for
@@ -42,10 +42,11 @@
   /* Inline on purpose: no fonts, no frameworks, no trackers are fetched. The
      only external script is Cloudflare Web Analytics (cookieless, page views
      only — see privacy.html). The typeface is the system one (SF Pro on the
-     Macs this ships to), so it costs nothing and still reads as native. */
+     Macs this ships to). The hero is a live, self-contained demo of the app
+     driven by the small script at the end of the page — CSS transforms and
+     opacity only, and it holds still under prefers-reduced-motion. */
   :root {
-    --bg: #08090c;
-    --bg-soft: #0e1016;
+    --bg: #06070a;
     --panel: rgba(255,255,255,.035);
     --panel-2: rgba(255,255,255,.06);
     --line: rgba(255,255,255,.08);
@@ -53,55 +54,34 @@
     --text: #f4f6f9;
     --dim: rgba(244,246,249,.64);
     --faint: rgba(244,246,249,.40);
-    --accent: #6ea8fe;      /* the icon's blue — the brand colour, not a vendor's */
+    --accent: #6ea8fe;
     --accent-ink: #06183a;
-    --warm: #e8825a;        /* the icon's mouth — a sparing highlight */
+    --warm: #e8825a;
     --green: #63d089;
+    --amber: #ffb74d;
     --radius: 16px;
-    --maxw: 1080px;
+    --maxw: 1120px;
     --readw: 720px;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
     margin: 0; background: var(--bg); color: var(--text);
     font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
   }
-  /* Aurora: three fixed, blurred colour fields behind everything, in the icon's
-     own hues. Fixed + will-change-free; it is paint, not motion. */
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
   .aurora { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-  .aurora::before, .aurora::after {
-    content: ""; position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5;
-  }
-  .aurora::before {
-    width: 760px; height: 620px; top: -260px; left: 50%; transform: translateX(-58%);
-    background: radial-gradient(closest-side, rgba(110,168,254,.30), transparent 70%);
-  }
-  .aurora::after {
-    width: 620px; height: 520px; top: 220px; right: -180px;
-    background: radial-gradient(closest-side, rgba(232,130,90,.16), transparent 70%);
-  }
-  .aurora i {
-    position: absolute; width: 560px; height: 460px; left: -160px; top: 640px;
-    border-radius: 50%; filter: blur(90px); opacity: .4;
-    background: radial-gradient(closest-side, rgba(99,208,137,.12), transparent 70%);
-  }
-
+  .aurora::before, .aurora::after { content: ""; position: absolute; border-radius: 50%; filter: blur(100px); }
+  .aurora::before { width: 900px; height: 640px; top: -300px; left: 50%; transform: translateX(-55%); background: radial-gradient(closest-side, rgba(110,168,254,.34), transparent 70%); opacity: .6; }
+  .aurora::after { width: 640px; height: 520px; top: 320px; right: -180px; background: radial-gradient(closest-side, rgba(232,130,90,.14), transparent 70%); opacity: .5; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
   .col { max-width: var(--readw); }
 
-  /* ---------- top nav ---------- */
-  .nav {
-    position: sticky; top: 0; z-index: 50;
-    backdrop-filter: saturate(140%) blur(14px); -webkit-backdrop-filter: saturate(140%) blur(14px);
-    background: rgba(8,9,12,.72); border-bottom: 1px solid transparent;
-    transition: border-color .2s ease, background .2s ease;
-  }
+  /* nav */
+  .nav { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(140%) blur(14px); -webkit-backdrop-filter: saturate(140%) blur(14px); background: rgba(6,7,10,.72); border-bottom: 1px solid transparent; transition: border-color .2s ease; }
   .nav.scrolled { border-bottom-color: var(--line); }
   .nav .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; letter-spacing: -.01em; color: var(--text); }
@@ -110,123 +90,152 @@
   .nav a.link { color: var(--dim); font-size: 14.5px; font-weight: 550; }
   .nav a.link:hover { color: var(--text); text-decoration: none; }
   .nav .btn { padding: 8px 16px; font-size: 14px; }
-  @media (max-width: 560px) { .nav a.link.hide-sm { display: none; } }
+  @media (max-width: 620px) { .nav a.link.hide-sm { display: none; } }
 
-  /* ---------- buttons ---------- */
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px;
-    border-radius: 12px; font-weight: 650; font-size: 15px; border: 1px solid transparent;
-    cursor: pointer; transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
-    white-space: nowrap;
-  }
-  .btn.primary {
-    background: linear-gradient(180deg, #86baff, var(--accent));
-    color: var(--accent-ink);
-    box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 8px 24px -8px rgba(110,168,254,.7);
-  }
+  /* buttons */
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; border-radius: 12px; font-weight: 650; font-size: 15px; border: 1px solid transparent; cursor: pointer; transition: transform .12s ease, box-shadow .2s ease; white-space: nowrap; }
+  .btn.primary { background: linear-gradient(180deg, #86baff, var(--accent)); color: var(--accent-ink); box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 8px 24px -8px rgba(110,168,254,.7); }
   .btn.primary:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 12px 30px -8px rgba(110,168,254,.85); text-decoration: none; }
   .btn.ghost { border-color: var(--line-2); color: var(--text); background: var(--panel); }
   .btn.ghost:hover { border-color: var(--dim); background: var(--panel-2); text-decoration: none; }
-  @media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
 
-  /* ---------- hero ---------- */
-  header.hero { text-align: center; padding: 76px 0 44px; }
-  .badge {
-    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 26px;
-    padding: 6px 14px 6px 8px; border-radius: 99px; border: 1px solid var(--line-2);
-    background: var(--panel); color: var(--dim); font-size: 13px; font-weight: 550;
-  }
-  .badge img { width: 20px; height: 20px; border-radius: 6px; }
-  h1 {
-    font-size: clamp(34px, 6vw, 58px); line-height: 1.06; margin: 0 auto 20px;
-    letter-spacing: -.03em; max-width: 15ch; font-weight: 700;
-    background: linear-gradient(180deg, #ffffff, #c7cede);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .tagline { font-size: clamp(17px, 2.2vw, 20px); color: var(--dim); margin: 0 auto 30px; max-width: 42ch; }
+  /* hero */
+  header.hero { text-align: center; padding: 68px 0 30px; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--panel); color: var(--dim); font-size: 13px; font-weight: 550; }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.03; margin: 0 auto 18px; letter-spacing: -.035em; max-width: 16ch; font-weight: 720; background: linear-gradient(180deg, #ffffff 34%, #aeb8cc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tagline { font-size: clamp(17px, 2.2vw, 20px); color: var(--dim); margin: 0 auto 28px; max-width: 44ch; }
   .cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-  .trust { margin-top: 26px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
-  .trust .meta { color: var(--faint); font-size: 13px; margin: 0; }
-  .trust code { font-size: 12.5px; }
-  .free-line { color: var(--green); font-weight: 600; font-size: 14px; }
-  code {
-    background: rgba(255,255,255,.06); padding: 2px 7px; border-radius: 6px;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px;
-    border: 1px solid var(--line);
+  .subcta { margin-top: 16px; color: var(--faint); font-size: 13px; }
+  .subcta .free { color: var(--green); font-weight: 600; }
+  code { background: rgba(255,255,255,.06); padding: 2px 7px; border-radius: 6px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; border: 1px solid var(--line); }
+
+  /* ===== the living demo ===== */
+  .stage-wrap { max-width: 1000px; margin: 8px auto 0; padding: 0 24px; }
+  .stage {
+    position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--line-2);
+    background: #0b0d12; box-shadow: 0 50px 120px -40px rgba(0,0,0,.9), 0 0 100px -50px rgba(110,168,254,.45), 0 2px 0 rgba(255,255,255,.06) inset;
+  }
+  .stage-bar { height: 38px; display: flex; align-items: center; gap: 8px; padding: 0 14px; background: rgba(255,255,255,.04); border-bottom: 1px solid var(--line); }
+  .stage-bar .tl { width: 11px; height: 11px; border-radius: 50%; }
+  .stage-bar .pill { margin: 0 auto; font-size: 12px; color: var(--faint); padding: 4px 14px; border-radius: 8px; background: rgba(255,255,255,.05); }
+  .desktop {
+    position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+    background:
+      radial-gradient(1000px 560px at 50% -160px, #1a2748 0%, rgba(26,39,72,0) 60%),
+      radial-gradient(700px 520px at 88% 90%, rgba(232,130,90,.10), transparent 60%),
+      linear-gradient(180deg, #0c1018, #070a10);
+  }
+  @media (max-width: 560px) { .desktop { aspect-ratio: 4 / 5; } }
+  .menubar { position: absolute; top: 0; left: 0; right: 0; height: 26px; background: rgba(0,0,0,.28); display: flex; align-items: center; padding: 0 14px; gap: 16px; font-size: 11px; color: rgba(255,255,255,.7); z-index: 2; }
+  .menubar .r { margin-left: auto; color: rgba(255,255,255,.5); }
+  /* a faint terminal window for context */
+  .termwin { position: absolute; left: 6%; bottom: 8%; width: 52%; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: rgba(10,12,16,.82); box-shadow: 0 30px 60px -30px rgba(0,0,0,.8); }
+  .termwin .tb { height: 26px; background: rgba(255,255,255,.04); display: flex; align-items: center; gap: 6px; padding: 0 10px; }
+  .termwin .tb i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  .termwin .body { padding: 12px 14px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; line-height: 1.7; color: rgba(230,236,245,.66); }
+  .termwin .body .g { color: #7fd39a; } .termwin .body .b { color: #6ea8fe; } .termwin .body .d { color: rgba(230,236,245,.38); }
+  .cursor { position: absolute; z-index: 6; width: 22px; height: 22px; pointer-events: none; transition: transform .7s cubic-bezier(.4,0,.2,1); filter: drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+
+  /* the island itself */
+  .island {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    z-index: 5; background: #0a0a0c; border: 1px solid rgba(255,255,255,.12); border-top: none;
+    border-radius: 0 0 16px 16px; overflow: hidden;
+    width: 190px; transition: width .42s cubic-bezier(.2,.9,.3,1.08);
+    box-shadow: 0 22px 50px -16px rgba(0,0,0,.85);
+  }
+  .island.lit { box-shadow: 0 26px 60px -16px rgba(0,0,0,.9), 0 0 60px -22px rgba(110,168,254,.5); }
+  .island .edge { position: absolute; top: 0; left: 16px; right: 16px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent); }
+  .island .cam { height: 22px; }
+  .isl-body { position: relative; }
+  .isl-body .wash { position: absolute; inset: 0; opacity: 0; transition: opacity .4s ease; }
+  /* ambient */
+  .amb { display: flex; align-items: center; justify-content: center; gap: 10px; height: 22px; padding-bottom: 8px; }
+  .amb .s { width: 9px; height: 9px; border-radius: 50%; }
+  @keyframes breathe { 0%,100% { opacity: .5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
+  @keyframes ring { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(2.1); opacity: 0; } }
+  .amb .s.run { animation: breathe 1.8s ease-in-out infinite; }
+  .amb .waitwrap { position: relative; width: 9px; height: 9px; }
+  .amb .waitwrap .halo { position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--amber); animation: ring 1.6s cubic-bezier(.2,.6,.3,1) infinite; }
+  /* card */
+  .card-in { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 9px; }
+  .cr { display: flex; align-items: center; gap: 9px; }
+  .cr .bdg { width: 24px; height: 24px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .cr .t { flex: 1; min-width: 0; }
+  .cr .t .a { color: #fff; font-size: 12.5px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -.01em; }
+  .cr .t .b { color: rgba(245,245,247,.6); font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ringc { position: relative; width: 24px; height: 24px; flex: none; }
+  .ringc .n { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600; }
+  .cmd { color: #fff; font-size: 11.5px; padding: 9px 11px; border-radius: 10px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)); box-shadow: 0 1px 0 rgba(255,255,255,.22) inset, 0 0 0 1px rgba(255,255,255,.08); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cmd .p { color: var(--accent); }
+  .acts { display: flex; align-items: center; gap: 9px; }
+  .bd { height: 30px; padding: 0 13px; border-radius: 9px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+  .bd.deny { background: rgba(255,255,255,.08); box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset; color: #fff; }
+  .bd.allow { background: linear-gradient(180deg,#fff,#e8e8ec); color: #000; box-shadow: 0 6px 14px -6px rgba(0,0,0,.6); margin-left: auto; }
+  .k { font-size: 9.5px; opacity: .45; }
+  /* verdict overlay */
+  .verdict { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .25s ease; pointer-events: none; z-index: 3; }
+  .verdict .disc { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: scale(.5); transition: transform .3s cubic-bezier(.2,.9,.3,1.4); }
+  /* cockpit */
+  .cock { padding: 10px 11px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .cock .h { display: flex; align-items: center; gap: 7px; padding: 2px 4px 8px; }
+  .cock .h .lab { color: var(--amber); font-size: 11px; font-weight: 650; }
+  .cock .h .sub { color: rgba(255,255,255,.42); font-size: 10.5px; }
+  .cock .h .cost { margin-left: auto; color: rgba(255,255,255,.5); font-size: 10.5px; }
+  .row { display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 9px; border-radius: 10px; }
+  .row .bar { width: 3px; height: 24px; border-radius: 2px; flex: none; }
+  .row .st { line-height: 1.15; }
+  .row .st .w { font-size: 10px; font-weight: 650; }
+  .row .st .tm { font-size: 10.5px; color: rgba(255,255,255,.6); }
+  .row .nm { color: #fff; font-size: 12px; font-weight: 600; }
+  .row .msg { color: rgba(255,255,255,.45); font-size: 10.5px; margin-left: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42%; }
+
+  .stage-cap { text-align: center; color: var(--faint); font-size: 13.5px; margin-top: 16px; }
+  .stage-cap b { color: var(--dim); font-weight: 600; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn:hover { transform: none; }
+    .amb .s.run, .amb .waitwrap .halo { animation: none; opacity: .9; }
+    .island { transition: none; }
   }
 
-  /* ---------- media frames ---------- */
-  .showcase { margin: 8px auto 0; max-width: 960px; position: relative; }
-  .frame {
-    position: relative; border-radius: 20px; overflow: hidden;
-    border: 1px solid var(--line-2);
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    box-shadow: 0 40px 80px -30px rgba(0,0,0,.8), 0 2px 0 rgba(255,255,255,.06) inset;
-  }
-  .frame img, .frame video { width: 100%; height: auto; display: block; }
+  /* sections */
+  section { padding: 68px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  .eyebrow { display: inline-block; font-size: 12.5px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  h2 { font-size: clamp(24px, 3.4vw, 32px); margin: 0 0 14px; letter-spacing: -.02em; font-weight: 680; }
+  .lede { color: var(--dim); font-size: 17px; margin: 0 0 32px; max-width: 52ch; }
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  .card2 { background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; transition: border-color .2s ease, transform .12s ease; }
+  .card2:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) { .card2:hover { transform: none; } }
+  .card2 .ic { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: rgba(110,168,254,.14); border: 1px solid rgba(110,168,254,.28); margin-bottom: 16px; }
+  .card2 .ic svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
+  .card2 h3 { font-size: 16.5px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .card2 p { margin: 0; color: var(--dim); font-size: 14.5px; }
+  .frame { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--line-2); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); box-shadow: 0 40px 80px -30px rgba(0,0,0,.8), 0 2px 0 rgba(255,255,255,.06) inset; }
+  .frame img { width: 100%; height: auto; display: block; }
   figure.shot { margin: 0; }
   figcaption { color: var(--faint); font-size: 13.5px; text-align: center; margin-top: 14px; }
 
-  /* ---------- sections ---------- */
-  section { padding: 72px 0; }
-  section + section { border-top: 1px solid var(--line); }
-  .eyebrow {
-    display: inline-block; font-size: 12.5px; font-weight: 650; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
-  }
-  h2 { font-size: clamp(24px, 3.4vw, 32px); margin: 0 0 14px; letter-spacing: -.02em; font-weight: 680; }
-  .lede { color: var(--dim); font-size: 17px; margin: 0 0 32px; max-width: 52ch; }
-
-  /* ---------- feature grid ---------- */
-  .grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
-  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
-  .card {
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
-    transition: border-color .2s ease, transform .12s ease;
-  }
-  .card:hover { border-color: var(--line-2); transform: translateY(-2px); }
-  @media (prefers-reduced-motion: reduce) { .card:hover { transform: none; } }
-  .card .ic {
-    width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center;
-    background: rgba(110,168,254,.14); border: 1px solid rgba(110,168,254,.28); margin-bottom: 16px;
-  }
-  .card .ic svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
-  .card h3 { font-size: 16.5px; margin: 0 0 6px; letter-spacing: -.01em; }
-  .card p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.6; }
-
-  /* ---------- CLI badges ---------- */
-  .cli-block { margin-top: 8px; display: grid; gap: 14px; }
-  .cli-row {
-    display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: start;
-    padding: 18px; border: 1px solid var(--line); border-radius: var(--radius);
-    background: var(--panel);
-  }
+  .cli-block { display: grid; gap: 14px; }
+  .cli-row { display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: start; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
   @media (max-width: 640px) { .cli-row { grid-template-columns: 1fr; gap: 8px; } }
-  .cli-row .k { color: var(--text); font-weight: 600; font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
-  .cli-row.ok .dot { color: var(--green); }
-  .cli-row .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+  .cli-row .kk { color: var(--text); font-weight: 600; font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
+  .cli-row .cd { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
   .pills { display: flex; flex-wrap: wrap; gap: 8px; }
-  .pill {
-    font-size: 13px; color: var(--dim); padding: 5px 11px; border-radius: 99px;
-    border: 1px solid var(--line-2); background: rgba(255,255,255,.03);
-  }
+  .pill { font-size: 13px; color: var(--dim); padding: 5px 11px; border-radius: 99px; border: 1px solid var(--line-2); background: rgba(255,255,255,.03); }
   .cli-row.ok .pill { color: var(--text); }
   .note { color: var(--faint); font-size: 14px; }
   .note + .note { margin-top: 10px; }
 
-  /* ---------- pricing ---------- */
   .tiers { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; align-items: start; }
   @media (max-width: 720px) { .tiers { grid-template-columns: 1fr; } }
-  .tier {
-    position: relative; border: 1px solid var(--line); border-radius: 20px; padding: 28px;
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  }
+  .tier { position: relative; border: 1px solid var(--line); border-radius: 20px; padding: 28px; background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); }
   .tier.free { border-color: rgba(99,208,137,.42); box-shadow: 0 0 0 1px rgba(99,208,137,.12), 0 30px 60px -40px rgba(99,208,137,.5); }
-  .tier .tag {
-    position: absolute; top: 20px; right: 20px; font-size: 11.5px; font-weight: 650;
-    letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px;
-  }
+  .tier .tag { position: absolute; top: 20px; right: 20px; font-size: 11.5px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; }
   .tier.free .tag { color: var(--green); background: rgba(99,208,137,.14); border: 1px solid rgba(99,208,137,.3); }
   .tier.pro .tag { color: var(--accent); background: rgba(110,168,254,.14); border: 1px solid rgba(110,168,254,.3); }
   .tier h3 { margin: 0 0 4px; font-size: 20px; letter-spacing: -.01em; }
@@ -235,51 +244,26 @@
   .tier.free .price .big { color: var(--green); }
   .tier ul { margin: 0 0 4px; padding: 0; list-style: none; }
   .tier li { position: relative; padding-left: 26px; margin-bottom: 11px; color: var(--dim); font-size: 14.5px; line-height: 1.55; }
-  .tier li::before {
-    content: ""; position: absolute; left: 0; top: 7px; width: 15px; height: 9px;
-    border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
-    transform: rotate(-45deg); border-radius: 1px;
-  }
+  .tier li::before { content: ""; position: absolute; left: 0; top: 7px; width: 15px; height: 9px; border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); border-radius: 1px; }
   .tier.free li::before { border-color: var(--green); }
   .tier li strong { color: var(--text); font-weight: 600; }
   .tier .btn { margin-top: 20px; width: 100%; justify-content: center; }
 
-  /* ---------- callout / business ---------- */
-  .callout {
-    border: 1px solid var(--line); border-left: 3px solid var(--accent);
-    border-radius: 14px; padding: 20px 22px;
-    background: linear-gradient(180deg, rgba(110,168,254,.06), rgba(255,255,255,.02));
-  }
-  .callout strong { color: var(--text); }
-  .callout p { margin: 0; color: var(--dim); font-size: 15px; }
-  .callout .meta { margin-top: 10px; color: var(--faint); font-size: 13.5px; }
-  .prose p { color: var(--dim); font-size: 15px; }
-  .prose p strong { color: var(--text); }
-  .prose p + p { margin-top: 14px; }
+  .callout { border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 14px; padding: 20px 22px; background: linear-gradient(180deg, rgba(110,168,254,.06), rgba(255,255,255,.02)); }
+  .callout strong { color: var(--text); } .callout p { margin: 0; color: var(--dim); font-size: 15px; } .callout .meta { margin-top: 10px; color: var(--faint); font-size: 13.5px; }
+  .prose p { color: var(--dim); font-size: 15px; } .prose p strong { color: var(--text); } .prose p + p { margin-top: 14px; }
 
-  /* ---------- FAQ ---------- */
-  details.q {
-    border-bottom: 1px solid var(--line); padding: 4px 0;
-  }
-  details.q summary {
-    list-style: none; cursor: pointer; padding: 16px 40px 16px 2px; position: relative;
-    font-size: 16px; font-weight: 600; color: var(--text);
-  }
+  details.q { border-bottom: 1px solid var(--line); padding: 4px 0; }
+  details.q summary { list-style: none; cursor: pointer; padding: 16px 40px 16px 2px; position: relative; font-size: 16px; font-weight: 600; color: var(--text); }
   details.q summary::-webkit-details-marker { display: none; }
-  details.q summary::after {
-    content: ""; position: absolute; right: 6px; top: 22px; width: 9px; height: 9px;
-    border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint);
-    transform: rotate(45deg); transition: transform .2s ease;
-  }
+  details.q summary::after { content: ""; position: absolute; right: 6px; top: 22px; width: 9px; height: 9px; border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint); transform: rotate(45deg); transition: transform .2s ease; }
   details.q[open] summary::after { transform: rotate(-135deg); }
   details.q .a { padding: 0 40px 18px 2px; color: var(--dim); font-size: 14.5px; line-height: 1.7; }
 
-  /* ---------- footer ---------- */
   footer { padding: 48px 0 72px; border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
   footer .wrap { display: flex; flex-direction: column; gap: 10px; }
   footer a { color: var(--dim); }
   .footrow { display: flex; gap: 10px 18px; flex-wrap: wrap; align-items: center; }
-  .footrow .brand { font-size: 15px; }
 </style>
 <!-- Cloudflare Web Analytics. Cookieless: no cookie is set, no visitor
      identifier is stored, nothing is shared with an ad network. It answers one
@@ -289,7 +273,7 @@
         data-cf-beacon='{"token": "e5f38d597aa24ba7aa0e81cd637a6ee0"}'></script>
 </head>
 <body>
-<div class="aurora"><i></i></div>
+<div class="aurora"></div>
 
 <nav class="nav" id="nav">
   <div class="wrap">
@@ -303,64 +287,62 @@
 </nav>
 
 <div class="wrap" id="top">
-
-<header class="hero">
-  <span class="badge"><img src="icon.png" alt="">Native macOS · no account · no telemetry</span>
-  <h1>Three agents running. One place to see which needs you.</h1>
-  <p class="tagline">When Claude Code stops to ask permission, the request appears at the top of your screen &mdash; answer it there and the agent carries on. Run several at once and they all report to the same place, so no session sits blocked while you are looking at a different terminal tab.</p>
-  <div class="cta">
-    <a class="btn primary" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.3/AgentIsland-8.1.3.dmg">Download for macOS</a>
-    <a class="btn ghost" href="#pricing">See pricing</a>
-  </div>
-  <div class="trust">
-    <p class="meta">Developer ID signed and notarized · macOS 14+ · Apple silicon and Intel · works with or without a real notch</p>
-    <p class="meta">or <code>brew install --cask agentislandapp/tap/agentisland</code></p>
-    <!-- Stated this high because it is the objection that stops people before
-         any feature does: whether the free tier is a countdown. It is not. -->
-    <p class="free-line">Free forever, not a trial &mdash; no time limit, no card, no account.</p>
-  </div>
-</header>
-
-<div class="showcase">
-  <figure class="shot frame">
-    <!-- A real recording of the running app, not an animation: the card arrives,
-         the countdown runs while the CLI waits, and nothing else moves. -->
-    <video src="demo.mp4" poster="demo-poster.png" autoplay muted loop playsinline
-           aria-label="A permission request appearing at the top of the screen while Claude Code waits."></video>
-  </figure>
-  <figcaption>A real permission request, answered without leaving what you were doing.</figcaption>
+  <header class="hero">
+    <span class="badge"><span class="dot"></span>Native macOS · no account · no telemetry</span>
+    <h1>Three agents running. One place to see which needs you.</h1>
+    <p class="tagline">When a coding agent stops to ask permission, the request drops from the notch &mdash; answer it there and the agent carries on. This is the app running; watch it work.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/agentislandapp/agentislandapp.github.io/releases/download/v8.1.3/AgentIsland-8.1.3.dmg">Download for macOS</a>
+      <a class="btn ghost" href="#pricing">See pricing</a>
+    </div>
+    <div class="subcta">
+      Developer ID signed &amp; notarized · macOS 14+ · <span class="free">Free forever, not a trial.</span>
+    </div>
+  </header>
 </div>
 
-</div><!-- /wrap -->
+<!-- ================= THE LIVING DEMO ================= -->
+<div class="stage-wrap">
+  <div class="stage" id="stage" role="img" aria-label="A live demonstration of AgentIsland: coding-agent permission requests appear in the notch at the top of the screen and are answered there, with a cockpit showing every session at once.">
+    <div class="stage-bar">
+      <span class="tl" style="background:#ff5f57"></span><span class="tl" style="background:#febc2e"></span><span class="tl" style="background:#28c840"></span>
+      <span class="pill">your screen</span>
+      <span style="width:52px"></span>
+    </div>
+    <div class="desktop">
+      <div class="menubar">
+        <span>&#63743;</span><span style="font-weight:600">Terminal</span><span style="opacity:.6">Shell</span><span style="opacity:.6">Edit</span>
+        <span class="r">Fri 10:42</span>
+      </div>
 
-<!-- The business model sits AFTER the demo on purpose: a first-time visitor
-     should see what the app does before the word "sponsored". -->
+      <div class="termwin" aria-hidden="true">
+        <div class="tb"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+        <div class="body mono" id="term">
+          <div><span class="g">&#9679;</span> payments-api &mdash; claude</div>
+          <div class="d">&gt; Add idempotency keys to the refund endpoint</div>
+          <div id="termline"><span class="b">&#8226;</span> Running migration&hellip;</div>
+        </div>
+      </div>
+
+      <div class="island" id="island"><div class="edge"></div><div class="cam"></div><div class="isl-body" id="islbody"></div></div>
+
+      <svg class="cursor" id="cursor" viewBox="0 0 24 24" style="transform: translate(600px, 520px)"><path d="M4 2l16 8-7 2-2 7z" fill="#fff" stroke="rgba(0,0,0,.4)" stroke-width="1"/></svg>
+    </div>
+  </div>
+  <p class="stage-cap"><b>Live, right here.</b> The same thing happens on your screen &mdash; no video, no edit. <a href="#pricing">See what Free and Pro give you &darr;</a></p>
+</div>
+
+<!-- ================= SECTIONS ================= -->
 <section id="what">
   <div class="wrap">
     <span class="eyebrow">What it does</span>
     <h2>The blocked session finds you, not the other way around.</h2>
     <p class="lede">Four things, and nothing you have to configure to get them.</p>
     <div class="grid">
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-        <h3>Answer prompts without switching apps</h3>
-        <p>The card shows the tool, the command, and a red/green diff for edits. Allow or deny with a click, or ⌥↩ and ⌥N from any app.</p>
-      </div>
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-        <h3>See every session at a glance</h3>
-        <p>One dot per running session, tinted by which CLI it is, with a context-usage ring and a todo count. Nothing else, until something needs you.</p>
-      </div>
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 3z"/></svg></div>
-        <h3>Reply from anywhere</h3>
-        <p>⌥Space opens a composer aimed at whichever session most needs you. Type or dictate; it is delivered through tmux, or typed into the terminal for you.</p>
-      </div>
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg></div>
-        <h3>Know what it costs</h3>
-        <p>Live model, context percentage and spend per session &mdash; and a history of what each project actually cost you this week.</p>
-      </div>
+      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><h3>Answer prompts without switching apps</h3><p>The card shows the tool, the command, and a red/green diff for edits. Allow or deny with a click, or ⌥↩ and ⌥N from any app.</p></div>
+      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>See every session at a glance</h3><p>One dot per running session, tinted by which CLI it is, with a context-usage ring and a todo count. Nothing else, until something needs you.</p></div>
+      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 3z"/></svg></div><h3>Reply from anywhere</h3><p>⌥Space opens a composer aimed at whichever session most needs you. Type or dictate; it is delivered through tmux, or typed into the terminal for you.</p></div>
+      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg></div><h3>Know what it costs</h3><p>Live model, context percentage and spend per session &mdash; and a history of what each project actually cost you this week.</p></div>
     </div>
   </div>
 </section>
@@ -370,32 +352,15 @@
     <span class="eyebrow">The cockpit &middot; ⌥P</span>
     <h2>When one session isn't the whole story.</h2>
     <p class="lede">Every live session on one screen, one row each &mdash; whatever needs an answer sorts to the top, and the one that's asking answers right where it sits.</p>
-    <div class="showcase">
-      <figure class="shot frame">
-        <!-- The paid feature, photographed rather than described. Real screenshot
-             of the real app; the project names are invented because three agents
-             do not block on cue. -->
-        <img src="cockpit.png" alt="Several sessions listed under one permission card: payments-api asking to run npx prisma migrate deploy with Deny and Allow, a plus-one-waiting badge and a countdown, and beneath it storefront-web, infra-terraform and two idle sessions with what each is doing.">
-      </figure>
-      <figcaption>One request answered here, and every other session in view underneath it &mdash; including the second one already waiting.</figcaption>
-    </div>
+    <figure class="shot frame">
+      <img src="cockpit.png" alt="Several sessions listed under one permission card: payments-api asking to run npx prisma migrate deploy with Deny and Allow, a plus-one-waiting badge and a countdown, and beneath it storefront-web, infra-terraform and two idle sessions with what each is doing.">
+    </figure>
+    <figcaption>One request answered here, and every other session in view underneath it.</figcaption>
     <div class="grid" style="margin-top:36px">
-      <div class="card">
-        <h3>Answer a permission in the row it belongs to</h3>
-        <p>A session asking for something tints its row and grows a line with the command, the countdown, and Deny/Allow. Several agents can be asking at once; you see all of them, not one at a time.</p>
-      </div>
-      <div class="card">
-        <h3>Drive it without the mouse</h3>
-        <p>⌥↑ and ⌥↓ move between rows, ⌥↩ allows or opens a composer, ⌥N denies, ⌥S stops. The keys are printed along the bottom, and change with what the selected row can do.</p>
-      </div>
-      <div class="card">
-        <h3>Read the fleet in one line</h3>
-        <p>The header says what is waiting on you, what is running and what it has cost; the footer reports the day. Past five sessions the rows group under their project with a subtotal each.</p>
-      </div>
-      <div class="card">
-        <h3>Cost that is never invented</h3>
-        <p>It is whatever the CLI reports about itself. Claude Code and OpenCode report one; the rest do not, and their rows say so rather than printing $0.00.</p>
-      </div>
+      <div class="card2"><h3>Answer a permission in the row it belongs to</h3><p>A session asking for something tints its row and grows a line with the command, the countdown, and Deny/Allow. Several agents can be asking at once; you see all of them.</p></div>
+      <div class="card2"><h3>Drive it without the mouse</h3><p>⌥↑ and ⌥↓ move between rows, ⌥↩ allows or opens a composer, ⌥N denies, ⌥S stops. The keys are printed along the bottom, and change with what the selected row can do.</p></div>
+      <div class="card2"><h3>Read the fleet in one line</h3><p>The header says what is waiting on you, what is running and what it has cost; the footer reports the day. Past five sessions the rows group under their project.</p></div>
+      <div class="card2"><h3>Cost that is never invented</h3><p>It is whatever the CLI reports about itself. Claude Code and OpenCode report one; the rest do not, and their rows say so rather than printing $0.00.</p></div>
     </div>
   </div>
 </section>
@@ -406,31 +371,11 @@
     <h2>Twelve CLIs, answered from the same place.</h2>
     <p class="lede">Depth differs per tool, so it is stated per tool &mdash; the app says the same thing in its own Settings rather than implying more than it does.</p>
     <div class="cli-block">
-      <div class="cli-row ok">
-        <div class="k"><span class="dot"></span>Answer the prompt here</div>
-        <div class="pills">
-          <span class="pill">Claude Code</span><span class="pill">Codex</span><span class="pill">Cursor</span>
-          <span class="pill">Gemini CLI</span><span class="pill">Crush</span><span class="pill">Qwen Code</span>
-          <span class="pill">Factory Droid</span><span class="pill">Kimi</span><span class="pill">Cline</span>
-          <span class="pill">Goose</span><span class="pill">Amp</span><span class="pill">OpenCode</span>
-        </div>
-      </div>
-      <div class="cli-row">
-        <div class="k"><span class="dot" style="color:var(--faint)"></span>Status only</div>
-        <div class="pills">
-          <span class="pill">Aider</span><span class="pill">iFlow</span>
-          <span class="pill" style="border-style:dashed">neither lets an outside program answer a prompt</span>
-        </div>
-      </div>
-      <div class="cli-row">
-        <div class="k"><span class="dot" style="color:var(--warm)"></span>Needs one step from you</div>
-        <div class="pills">
-          <span class="pill">DeepSeek (dsh)</span>
-          <span class="pill" style="border-style:dashed">runs our hooks through its Claude Code bridge, which you mount</span>
-        </div>
-      </div>
+      <div class="cli-row ok"><div class="kk"><span class="cd" style="color:var(--green)"></span>Answer the prompt here</div><div class="pills"><span class="pill">Claude Code</span><span class="pill">Codex</span><span class="pill">Cursor</span><span class="pill">Gemini CLI</span><span class="pill">Crush</span><span class="pill">Qwen Code</span><span class="pill">Factory Droid</span><span class="pill">Kimi</span><span class="pill">Cline</span><span class="pill">Goose</span><span class="pill">Amp</span><span class="pill">OpenCode</span></div></div>
+      <div class="cli-row"><div class="kk"><span class="cd" style="color:var(--faint)"></span>Status only</div><div class="pills"><span class="pill">Aider</span><span class="pill">iFlow</span><span class="pill" style="border-style:dashed">neither lets an outside program answer a prompt</span></div></div>
+      <div class="cli-row"><div class="kk"><span class="cd" style="color:var(--warm)"></span>Needs one step from you</div><div class="pills"><span class="pill">DeepSeek (dsh)</span><span class="pill" style="border-style:dashed">runs our hooks through its Claude Code bridge, which you mount</span></div></div>
     </div>
-    <p class="note" style="margin-top:18px">Each was checked against that tool's own documentation in September 2026, not assumed from a family resemblance. Several added blocking hooks recently enough that most integrations have not noticed. GLM/Zhipu setups run the real <code>claude</code> binary, so they work through the Claude Code integration.</p>
+    <p class="note" style="margin-top:18px">Each was checked against that tool's own documentation in September 2026, not assumed from a family resemblance. GLM/Zhipu setups run the real <code>claude</code> binary, so they work through the Claude Code integration.</p>
   </div>
 </section>
 
@@ -483,10 +428,9 @@
     </div>
     <div class="prose">
       <p>Every app this size eventually has to answer this, and a plan you only learn about on the day it ships is not a plan, it is a surprise. So: two lines, and no third one.</p>
-      <p><strong>One payment, or one sponsored line.</strong> Pro is $49 once &mdash; not a subscription, not a renewal, not a licence that stops working next year. The free tier is paid for the other way: an occasional sponsored line, from a named sponsor who bought the slot directly. That is the whole business. There is no third revenue line hiding in the app, and there is nothing to sell about you, because nothing about you leaves the machine.</p>
-      <p><strong>Nothing is running yet.</strong> There is no advertising in AgentIsland today and nothing has been shown to anyone. What exists already is the machinery and the switch. <strong>We are going to run it</strong> &mdash; a stated intention, not a maybe &mdash; once there are enough people using the app for a sponsor's money to be worth asking for.</p>
-      <p><strong>Nobody is paid to look at them.</strong> An earlier version of this page promised the opposite &mdash; that sponsor money would come back to you as credit. It was built and then removed, because paying people per impression is what ad networks call invalid traffic, and a business that has to police its own users for fraud is a worse deal for everyone than a cheaper app.</p>
-      <p><strong>And it stays out of the way.</strong> One sponsored line beneath your own sessions. Never over a permission request, never while an agent is working, at most once every four hours, and dismissing one buys a full day of quiet. If it could appear in the moment an agent needs you, it would have deleted the reason the app exists &mdash; so it cannot.</p>
+      <p><strong>One payment, or one sponsored line.</strong> Pro is $49 once &mdash; not a subscription, not a renewal. The free tier is paid for the other way: an occasional sponsored line, from a named sponsor who bought the slot directly. That is the whole business. There is nothing to sell about you, because nothing about you leaves the machine.</p>
+      <p><strong>Nothing is running yet.</strong> There is no advertising in AgentIsland today and nothing has been shown to anyone. What exists already is the machinery and the switch. <strong>We are going to run it</strong> once there are enough people using the app for a sponsor's money to be worth asking for.</p>
+      <p><strong>And it stays out of the way.</strong> One sponsored line beneath your own sessions. Never over a permission request, never while an agent is working, at most once every four hours, and dismissing one buys a full day of quiet.</p>
     </div>
   </div>
 </section>
@@ -503,93 +447,191 @@
   </div>
 </section>
 
-<!-- These are the questions people actually type before they know this app
-     exists, which is why they are phrased as questions. -->
 <section>
   <div class="wrap col">
     <span class="eyebrow">Questions</span>
     <h2>The things people ask first.</h2>
-
-    <details class="q" open>
-      <summary>How do I know when Claude Code is waiting for me?</summary>
-      <div class="a">That is the whole point of this app. Claude Code stops on a permission request and waits silently, which you often notice minutes later. AgentIsland puts the request at the top of your screen the moment it fires, with a counter showing how long the CLI has been blocked.</div>
-    </details>
-    <details class="q">
-      <summary>Can I answer a permission prompt without switching windows?</summary>
-      <div class="a">Yes. The card carries the command and Deny/Allow, so you answer from whatever app you are in and the agent carries on. ⌥↩ allows and ⌥N denies from the keyboard, anywhere.</div>
-    </details>
-    <details class="q">
-      <summary>Does it work on a Mac without a notch?</summary>
-      <div class="a">Yes. On a Mac or an external display without a physical notch the app draws its own island in the same place, so it behaves identically.</div>
-    </details>
-    <details class="q">
-      <summary>Which coding agents does it work with?</summary>
-      <div class="a">Twelve of fifteen let you answer the prompt in the island: Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp and OpenCode. Aider and iFlow report status only, because neither lets an outside program answer a prompt. DeepSeek can run our hooks through its own Claude Code bridge once you mount it.</div>
-    </details>
-    <details class="q">
-      <summary>Is it free?</summary>
-      <div class="a">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited on it, and never rationed by session &mdash; if a second Claude Code session stops to ask you something, the card still reaches you. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and gives you a switch to turn off the sponsored line.</div>
-    </details>
-    <details class="q">
-      <summary>Why do my allow rules keep asking anyway?</summary>
-      <div class="a">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</div>
-    </details>
-    <details class="q">
-      <summary>I wrote a Claude Code hook and it does nothing. Why?</summary>
-      <div class="a">Start with <code>claude --debug hooks</code>, which shows whether your hook is ever invoked and so splits a config problem from a script problem in one line. <a href="hooks.html">The rest is here</a>: the unquoted path with a space in it, the matcher that misses, and why a hook must fail open rather than exit non-zero.</div>
-    </details>
-    <details class="q">
-      <summary>Why don't I get notified when Claude Code finishes?</summary>
-      <div class="a">Two reasons, usually. Claude Code only fires its notification when it thinks you are <em>away</em> from the terminal, so watching the window is a test designed to fail; and a desktop notification is sent by default only in Ghostty, Kitty and iTerm2 &mdash; everywhere else you need <code>"preferredNotifChannel": "terminal_bell"</code>. <a href="done.html">The settings, plus the traps</a> &mdash; and why "done" turns out to be three states rather than one.</div>
-    </details>
-    <details class="q">
-      <summary>Does it send my prompts or code anywhere?</summary>
-      <div class="a">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</div>
-    </details>
+    <details class="q" open><summary>How do I know when Claude Code is waiting for me?</summary><div class="a">That is the whole point of this app. Claude Code stops on a permission request and waits silently, which you often notice minutes later. AgentIsland puts the request at the top of your screen the moment it fires, with a counter showing how long the CLI has been blocked.</div></details>
+    <details class="q"><summary>Can I answer a permission prompt without switching windows?</summary><div class="a">Yes. The card carries the command and Deny/Allow, so you answer from whatever app you are in and the agent carries on. ⌥↩ allows and ⌥N denies from the keyboard, anywhere.</div></details>
+    <details class="q"><summary>Does it work on a Mac without a notch?</summary><div class="a">Yes. On a Mac or an external display without a physical notch the app draws its own island in the same place, so it behaves identically.</div></details>
+    <details class="q"><summary>Which coding agents does it work with?</summary><div class="a">Twelve of fifteen let you answer the prompt in the island: Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp and OpenCode. Aider and iFlow report status only. DeepSeek can run our hooks through its own Claude Code bridge once you mount it.</div></details>
+    <details class="q"><summary>Is it free?</summary><div class="a">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited, and never rationed by session. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and a switch to turn off the sponsored line.</div></details>
+    <details class="q"><summary>Why do my allow rules keep asking anyway?</summary><div class="a">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</div></details>
+    <details class="q"><summary>I wrote a Claude Code hook and it does nothing. Why?</summary><div class="a">Start with <code>claude --debug hooks</code>, which shows whether your hook is ever invoked and so splits a config problem from a script problem in one line. <a href="hooks.html">The rest is here</a>: the unquoted path with a space in it, the matcher that misses, and why a hook must fail open rather than exit non-zero.</div></details>
+    <details class="q"><summary>Why don't I get notified when Claude Code finishes?</summary><div class="a">Two reasons, usually. Claude Code only fires its notification when it thinks you are <em>away</em> from the terminal; and a desktop notification is sent by default only in Ghostty, Kitty and iTerm2 &mdash; everywhere else you need <code>"preferredNotifChannel": "terminal_bell"</code>. <a href="done.html">The settings, plus the traps</a> &mdash; and why "done" turns out to be three states rather than one.</div></details>
+    <details class="q"><summary>Does it send my prompts or code anywhere?</summary><div class="a">No. Everything runs locally, there is no account, and prompts, commands, tool inputs, repository paths and transcripts are never sent anywhere under any setting.</div></details>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
     <div class="footrow"><a class="brand" href="#top"><img src="icon.png" alt="" style="width:24px;height:24px;border-radius:7px">AgentIsland</a></div>
-    <div class="footrow">
-      <a href="privacy.html">Privacy</a> · <a href="eula.html">Licence agreement</a> · <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">Report an issue</a>
-    </div>
+    <div class="footrow"><a href="privacy.html">Privacy</a> · <a href="eula.html">Licence agreement</a> · <a href="https://github.com/agentislandapp/agentislandapp.github.io/issues">Report an issue</a></div>
     <p>Support, billing and refunds: <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>. AgentIsland is made by Tiki Studios.</p>
     <p>Not affiliated with Anthropic, Google, OpenAI, Moonshot, Alibaba or Charm. Product names are their owners'.</p>
   </div>
 </footer>
 
 <script>
-/* Sticky-nav hairline on scroll. Pure cosmetic; no layout, no fetch. */
+/* Sticky-nav hairline on scroll. */
 (function () {
-  var nav = document.getElementById('nav');
-  if (!nav) return;
-  var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+  var nav = document.getElementById('nav'); if (!nav) return;
+  var f = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+  f(); window.addEventListener('scroll', f, { passive: true });
 })();
 
-/* Counts Download clicks. The buttons are still direct links to the DMG, so a
-   click starts the file transfer and never navigates — which is also why there
-   is no page load to count, and why Cloudflare Web Analytics (no custom events)
-   cannot see the click on its own. So load dl.html in a hidden iframe: it
-   carries the same beacon and the click lands in the dashboard as a page view
-   of /dl.html, next to the real ones. Nothing here touches the download; if
-   this script throws or is blocked, the link works exactly as before. */
+/* ===== The living demo. A small scripted state machine drives the island
+   through the app's real states — ambient dots, a permission card with a live
+   countdown, the allow/deny verdict, and the cockpit — on a loop. Pure DOM +
+   CSS transitions, transform/opacity only. Holds a single static frame under
+   prefers-reduced-motion, and pauses when the tab is hidden. If anything here
+   throws, the page is unaffected. ===== */
+(function () {
+  var island = document.getElementById('island');
+  var body = document.getElementById('islbody');
+  var cursor = document.getElementById('cursor');
+  var termline = document.getElementById('termline');
+  if (!island || !body) return;
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var TOOLS = {
+    claude: { c: '#6ea8fe', g: '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/>', sw: 3 },
+    codex:  { c: '#b39ddb', g: '<path d="M9 6l-4 6 4 6M15 6l4 6-4 6"/>', sw: 2.4 },
+    gemini: { c: '#7fd39a', g: '<path d="M12 4l2.2 5.8L20 12l-5.8 2.2L12 20l-2.2-5.8L4 12l5.8-2.2z"/>', sw: 2 }
+  };
+  function badge(t) {
+    var k = TOOLS[t] || TOOLS.claude;
+    return '<div class="bdg" style="background:linear-gradient(160deg,' + k.c + '66,' + k.c + '22)">' +
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="' + k.c + '" stroke-width="' + k.sw + '" stroke-linecap="round" stroke-linejoin="round">' + k.g + '</svg></div>';
+  }
+  function ringSvg(color, frac, id) {
+    var r = 10, c = 2 * Math.PI * r, off = c * (1 - frac);
+    return '<svg width="24" height="24" viewBox="0 0 24 24" style="transform:rotate(-90deg)">' +
+      '<circle cx="12" cy="12" r="' + r + '" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.4"/>' +
+      '<circle id="' + id + '" cx="12" cy="12" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg>';
+  }
+
+  function setWidth(w, lit) { island.style.width = w + 'px'; island.classList.toggle('lit', !!lit); }
+  function moveCursor(x, y) { if (cursor) cursor.style.transform = 'translate(' + x + 'px,' + y + 'px)'; }
+
+  var timers = [];
+  function after(ms, fn) { var t = setTimeout(fn, ms); timers.push(t); return t; }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  function ambient() {
+    setWidth(190, false);
+    body.innerHTML = '<div class="amb">' +
+      '<span class="s run" style="background:#6ea8fe;box-shadow:0 0 6px #6ea8fe"></span>' +
+      '<span class="s run" style="background:#b39ddb;box-shadow:0 0 6px #b39ddb;animation-delay:.5s"></span>' +
+      '<span class="waitwrap"><span class="halo"></span><span style="position:absolute;inset:0;border-radius:50%;background:#ffb74d;box-shadow:0 0 8px #ffb74d"></span></span>' +
+      '</div>';
+  }
+
+  function card(scene, then) {
+    setWidth(360, true);
+    var start = scene.start || 42;
+    body.innerHTML =
+      '<div class="card-in">' +
+        '<div class="cr">' + badge(scene.tool) +
+          '<div class="t"><div class="a">' + scene.project + ' &middot; ' + scene.toolName + '</div><div class="b">' + scene.prompt + '</div></div>' +
+          '<div class="ringc">' + ringSvg('#ffb74d', start / 50, 'dring') + '<div class="n mono" id="dnum" style="color:#ffb74d">' + start + '</div></div>' +
+        '</div>' +
+        '<div class="cmd mono"><span class="p">$</span> ' + scene.cmd + '</div>' +
+        '<div class="acts">' +
+          '<div class="bd deny">Deny <span class="k mono">&#8997;N</span></div>' +
+          '<div class="bd allow">Allow <span class="k mono">&#8997;&#8617;</span></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="verdict" id="verdict"><div class="disc" id="vdisc"></div></div>';
+
+    if (termline) termline.innerHTML = '<span style="color:#ffb74d">&#9632;</span> waiting for permission&hellip;';
+
+    // live countdown
+    var n = start, ring = document.getElementById('dring'), num = document.getElementById('dnum');
+    var c = 2 * Math.PI * 10;
+    var iv = setInterval(function () {
+      n -= 1; if (n < 0) n = 0;
+      if (num) num.textContent = n;
+      if (ring) ring.setAttribute('stroke-dashoffset', (c * (1 - n / 50)).toFixed(1));
+      if (n <= 0) clearInterval(iv);
+    }, 1000);
+    timers.push({ clear: function () { clearInterval(iv); } });
+
+    // move cursor to the button, then "press"
+    after(700, function () { moveCursor(scene.decision === 'allow' ? 632 : 372, 150); });
+    after(2300, function () {
+      clearInterval(iv);
+      var allow = scene.decision === 'allow';
+      var col = allow ? '#63d089' : '#ef5350';
+      var v = document.getElementById('verdict'), d = document.getElementById('vdisc');
+      var wash = document.createElement('div'); wash.className = 'wash';
+      wash.style.background = 'radial-gradient(320px 220px at ' + (allow ? '90% 88%' : '10% 88%') + ',' + col + '88,' + col + '22 45%,transparent 78%)';
+      body.insertBefore(wash, body.firstChild);
+      requestAnimationFrame(function () { wash.style.opacity = '1'; });
+      if (d) d.style.background = col;
+      if (d) d.innerHTML = allow
+        ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#06210f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2a0808" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+      if (v) { v.style.opacity = '1'; }
+      if (d) requestAnimationFrame(function () { d.style.transform = 'scale(1)'; });
+      if (termline) termline.innerHTML = allow ? '<span class="g">&#9679;</span> migration applied &mdash; continuing' : '<span class="d">&#9679;</span> denied &mdash; asked for another approach';
+    });
+    after(3400, then);
+  }
+
+  function cockpit(then) {
+    setWidth(440, true);
+    body.innerHTML =
+      '<div class="cock">' +
+        '<div class="h"><span style="width:6px;height:6px;border-radius:50%;background:#ffb74d;box-shadow:0 0 6px #ffb74d"></span><span class="lab">1 needs your answer</span><span class="sub">&middot; 3 running</span><span class="cost mono">$17.34</span></div>' +
+        row('#ffb74d', 'Waiting', '0:42', 'Strada.Brain', 'npx prisma migrate deploy', true) +
+        row('#6ea8fe', 'Running', '0:04', 'promptmaster', 'Bash: sed -i …', false) +
+        row('#b39ddb', 'Running', '0:22', 'infra-terraform', 'Read: main.tf', false) +
+        row('#7fd39a', 'Running', '0:07', 'api-docs', 'Thinking…', false) +
+      '</div>';
+    if (termline) termline.innerHTML = '<span class="b">&#8226;</span> ⌥P &mdash; every session in one place';
+    after(3600, then);
+  }
+  function row(color, word, tm, name, msg, lit) {
+    var bg = lit ? 'background:linear-gradient(90deg,' + color + '28,rgba(255,255,255,.03));box-shadow:0 0 0 1px ' + color + '80 inset' : 'background:rgba(255,255,255,.04)';
+    var glow = lit ? ';box-shadow:0 0 8px ' + color : '';
+    return '<div class="row" style="' + bg + '">' +
+      '<span class="bar" style="background:' + color + glow + '"></span>' +
+      '<div class="st"><div class="w" style="color:' + color + '">' + word + '</div><div class="tm mono">' + tm + '</div></div>' +
+      '<div class="nm">' + name + '</div><div class="msg mono">' + msg + '</div></div>';
+  }
+
+  var scenes = [
+    function (n) { card({ tool: 'codex', toolName: 'Bash', project: 'payments-api', prompt: 'Add idempotency keys to the refund endpoint', cmd: 'npx prisma migrate deploy', decision: 'allow', start: 42 }, n); },
+    function (n) { ambient(); after(1500, n); },
+    function (n) { card({ tool: 'gemini', toolName: 'Bash', project: 'storefront-web', prompt: 'Migrate the checkout form', cmd: 'rm -rf node_modules && npm ci', decision: 'deny', start: 38 }, n); },
+    function (n) { cockpit(n); },
+    function (n) { ambient(); after(1500, n); }
+  ];
+
+  if (reduce) { card({ tool: 'codex', toolName: 'Bash', project: 'payments-api', prompt: 'Add idempotency keys to the refund endpoint', cmd: 'npx prisma migrate deploy', decision: 'allow', start: 42 }, function () {}); return; }
+
+  var i = 0, running = true;
+  function next() { if (!running) return; var s = scenes[i % scenes.length]; i++; clearButKeepCountdownGuard(); s(next); }
+  function clearButKeepCountdownGuard() { timers.forEach(function (t) { if (t && t.clear) t.clear(); else clearTimeout(t); }); timers = []; }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { running = false; clearButKeepCountdownGuard(); }
+    else if (!running) { running = true; i = 0; next(); }
+  });
+  ambient();
+  after(1200, next);
+})();
+
+/* Counts Download clicks by loading dl.html in a hidden iframe (same beacon).
+   The link still starts the transfer; if this throws it changes nothing. */
 (function () {
   var counted = false;
   document.addEventListener('click', function (e) {
     if (counted || !e.target || !e.target.closest) return;
     if (!e.target.closest('a[href*="/releases/download/"]')) return;
-    /* Once per visit on purpose: this answers "how many visitors started a
-       download", not "how many times a button was pressed", so a double click
-       or a second attempt after a failed transfer must not read as two people. */
     counted = true;
     var f = document.createElement('iframe');
-    f.src = 'dl.html';
-    f.setAttribute('aria-hidden', 'true');
-    f.setAttribute('tabindex', '-1');
+    f.src = 'dl.html'; f.setAttribute('aria-hidden', 'true'); f.setAttribute('tabindex', '-1');
     f.style.cssText = 'position:absolute;left:-9999px;width:0;height:0;border:0';
     document.body.appendChild(f);
     setTimeout(function () { f.parentNode && f.parentNode.removeChild(f); }, 5000);
