@@ -200,6 +200,50 @@
     .island { transition: none; }
   }
 
+  /* product mini-mockups inside sections — same language as the hero demo */
+  .feat-grid { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .feat-grid { grid-template-columns: 1fr; } }
+  .feat { border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); transition: border-color .2s ease, transform .12s ease; }
+  .feat:hover { border-color: var(--line-2); transform: translateY(-3px); }
+  @media (prefers-reduced-motion: reduce) { .feat:hover { transform: none; } }
+  .feat .demo { position: relative; height: 168px; display: flex; align-items: center; justify-content: center; padding: 0 22px; overflow: hidden; border-bottom: 1px solid var(--line); background: radial-gradient(460px 220px at 50% -30px, rgba(110,168,254,.16), transparent 62%), radial-gradient(340px 200px at 90% 120%, rgba(232,130,90,.08), transparent 60%), #0a0c11; }
+  .feat .cap { padding: 20px 22px 22px; }
+  .feat h3 { margin: 0 0 6px; font-size: 16.5px; letter-spacing: -.01em; }
+  .feat p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.6; }
+  /* mini permission card */
+  .mcard { width: 300px; background: #0a0a0c; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; overflow: hidden; position: relative; box-shadow: 0 18px 40px -18px rgba(0,0,0,.8); }
+  .mcard .w { position: absolute; inset: 0; background: radial-gradient(260px 180px at 12% 0%, rgba(110,168,254,.2), transparent 66%); }
+  .mcard .in { position: relative; padding: 11px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .mrow { display: flex; align-items: center; gap: 8px; }
+  .mbdg { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .mtitle { color: #fff; font-size: 12px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .msub { color: rgba(245,245,247,.55); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mcmd { color: #fff; font-size: 11px; padding: 8px 10px; border-radius: 9px; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)); box-shadow: 0 1px 0 rgba(255,255,255,.22) inset; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mcmd .p { color: var(--accent); }
+  .macts { display: flex; align-items: center; gap: 8px; }
+  .mbd { height: 27px; padding: 0 12px; border-radius: 8px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; }
+  .mbd.d { background: rgba(255,255,255,.08); box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset; color: #fff; }
+  .mbd.a { background: linear-gradient(180deg,#fff,#e8e8ec); color: #000; margin-left: auto; }
+  /* mini island strip */
+  .mstrip { width: 250px; height: 40px; background: #0a0a0c; border: 1px solid rgba(255,255,255,.1); border-radius: 0 0 16px 16px; border-top: none; display: flex; align-items: center; justify-content: flex-end; gap: 9px; padding: 0 16px; box-shadow: 0 14px 34px -16px rgba(0,0,0,.8); }
+  .mstrip .s { width: 9px; height: 9px; border-radius: 50%; }
+  .mstrip .plus { color: var(--faint); font-size: 11px; font-weight: 700; }
+  /* mini composer */
+  .mcomp { width: 300px; display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 14px; border-radius: 13px; background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04)); border: 1px solid rgba(110,168,254,.4); box-shadow: 0 0 20px -6px rgba(110,168,254,.4); }
+  .mcomp .ph { flex: 1; color: rgba(245,245,247,.5); font-size: 13px; }
+  .mcomp .mic { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.1); box-shadow: 0 0 0 .5px rgba(255,255,255,.2) inset; display: flex; align-items: center; justify-content: center; }
+  .mcomp .send { height: 28px; padding: 0 12px; border-radius: 8px; background: linear-gradient(180deg,#8dbcff,#6ea8fe); color: var(--accent-ink); font-size: 12px; font-weight: 650; display: flex; align-items: center; }
+  /* mini cost readout */
+  .mcost { width: 300px; background: #0a0a0c; border: 1px solid rgba(255,255,255,.1); border-radius: 13px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; box-shadow: 0 14px 34px -16px rgba(0,0,0,.8); }
+  .mcost .rng { position: relative; width: 40px; height: 40px; flex: none; }
+  .mcost .rng .n { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
+  .mcost .lbl { color: rgba(245,245,247,.6); font-size: 11.5px; }
+  .mcost .val { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+
+  /* framed cockpit for the section */
+  .cockframe { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--line-2); background: radial-gradient(700px 300px at 30% -60px, rgba(110,168,254,.12), transparent 60%), #0a0c11; box-shadow: 0 40px 90px -34px rgba(0,0,0,.85), 0 2px 0 rgba(255,255,255,.06) inset; padding: 22px; }
+  @media (max-width: 560px) { .cockframe { padding: 12px; } }
+
   /* sections */
   section { padding: 68px 0; }
   section + section { border-top: 1px solid var(--line); }
@@ -337,12 +381,58 @@
   <div class="wrap">
     <span class="eyebrow">What it does</span>
     <h2>The blocked session finds you, not the other way around.</h2>
-    <p class="lede">Four things, and nothing you have to configure to get them.</p>
-    <div class="grid">
-      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><h3>Answer prompts without switching apps</h3><p>The card shows the tool, the command, and a red/green diff for edits. Allow or deny with a click, or ⌥↩ and ⌥N from any app.</p></div>
-      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>See every session at a glance</h3><p>One dot per running session, tinted by which CLI it is, with a context-usage ring and a todo count. Nothing else, until something needs you.</p></div>
-      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 3z"/></svg></div><h3>Reply from anywhere</h3><p>⌥Space opens a composer aimed at whichever session most needs you. Type or dictate; it is delivered through tmux, or typed into the terminal for you.</p></div>
-      <div class="card2"><div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg></div><h3>Know what it costs</h3><p>Live model, context percentage and spend per session &mdash; and a history of what each project actually cost you this week.</p></div>
+    <p class="lede">Four things, and nothing you have to configure to get them &mdash; each one, shown.</p>
+    <div class="feat-grid">
+
+      <div class="feat">
+        <div class="demo">
+          <div class="mcard"><div class="w"></div><div class="in">
+            <div class="mrow">
+              <div class="mbdg" style="background:linear-gradient(160deg,rgba(179,157,219,.45),rgba(179,157,219,.16))"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d6c8f0" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l-4 6 4 6M15 6l4 6-4 6"/></svg></div>
+              <div style="flex:1;min-width:0"><div class="mtitle">payments-api &middot; Bash</div><div class="msub">Add idempotency keys&hellip;</div></div>
+              <div class="ringc"><svg width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(-90deg)"><circle cx="12" cy="12" r="10" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#ffb74d" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="62.8" stroke-dashoffset="14"/></svg><div class="n mono" style="color:#ffb74d;font-size:9px">42</div></div>
+            </div>
+            <div class="mcmd mono"><span class="p">$</span> npx prisma migrate deploy</div>
+            <div class="macts"><div class="mbd d">Deny</div><div class="mbd a">Allow</div></div>
+          </div></div>
+        </div>
+        <div class="cap"><h3>Answer prompts without switching apps</h3><p>The card shows the tool, the command, and a red/green diff for edits. Allow or deny with a click, or ⌥↩ and ⌥N from any app.</p></div>
+      </div>
+
+      <div class="feat">
+        <div class="demo">
+          <div class="mstrip">
+            <span class="s run" style="background:#6ea8fe;box-shadow:0 0 6px #6ea8fe"></span>
+            <span class="s run" style="background:#b39ddb;box-shadow:0 0 6px #b39ddb;animation-delay:.5s"></span>
+            <span class="waitwrap" style="position:relative;width:9px;height:9px"><span class="halo" style="position:absolute;inset:0;border-radius:50%;border:1px solid #ffb74d"></span><span style="position:absolute;inset:0;border-radius:50%;background:#ffb74d;box-shadow:0 0 8px #ffb74d"></span></span>
+            <span class="plus">+2</span>
+          </div>
+        </div>
+        <div class="cap"><h3>See every session at a glance</h3><p>One dot per running session, tinted by which CLI it is, with a context-usage ring and a todo count. Nothing else, until something needs you.</p></div>
+      </div>
+
+      <div class="feat">
+        <div class="demo">
+          <div class="mcomp">
+            <span class="ph">Message payments-api&hellip;</span>
+            <span class="mic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+            <span class="send">Send</span>
+          </div>
+        </div>
+        <div class="cap"><h3>Reply from anywhere</h3><p>⌥Space opens a composer aimed at whichever session most needs you. Type or dictate; it is delivered through tmux, or typed into the terminal for you.</p></div>
+      </div>
+
+      <div class="feat">
+        <div class="demo">
+          <div class="mcost">
+            <div class="rng"><svg width="40" height="40" viewBox="0 0 40 40" style="transform:rotate(-90deg)"><circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="3"/><circle cx="20" cy="20" r="16" fill="none" stroke="#6ea8fe" stroke-width="3" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="42"/></svg><div class="n mono">58</div></div>
+            <div><div class="lbl">Claude Opus 5 &middot; context 58%</div><div class="val mono">$12.84</div></div>
+            <svg width="52" height="26" viewBox="0 0 52 26" fill="none" style="margin-left:auto"><path d="M2 22 L12 18 L20 20 L30 11 L40 13 L50 4" stroke="#6ea8fe" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".75"/></svg>
+          </div>
+        </div>
+        <div class="cap"><h3>Know what it costs</h3><p>Live model, context percentage and spend per session &mdash; and a history of what each project actually cost you this week.</p></div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -352,10 +442,54 @@
     <span class="eyebrow">The cockpit &middot; ⌥P</span>
     <h2>When one session isn't the whole story.</h2>
     <p class="lede">Every live session on one screen, one row each &mdash; whatever needs an answer sorts to the top, and the one that's asking answers right where it sits.</p>
-    <figure class="shot frame">
-      <img src="cockpit.png" alt="Several sessions listed under one permission card: payments-api asking to run npx prisma migrate deploy with Deny and Allow, a plus-one-waiting badge and a countdown, and beneath it storefront-web, infra-terraform and two idle sessions with what each is doing.">
-    </figure>
-    <figcaption>One request answered here, and every other session in view underneath it.</figcaption>
+    <div class="cockframe" role="img" aria-label="The cockpit: one session waiting on you at the top with its command and Deny/Allow, and three running sessions listed below, each with its status, elapsed time and what it is doing.">
+      <div style="display:flex;align-items:center;gap:9px;padding:2px 6px 14px">
+        <span style="width:7px;height:7px;border-radius:50%;background:#ffb74d;box-shadow:0 0 8px #ffb74d"></span>
+        <span style="color:#ffb74d;font-size:14px;font-weight:650">1 needs your answer</span>
+        <span style="color:rgba(255,255,255,.42);font-size:13px">&middot; 3 running</span>
+        <span class="mono" style="margin-left:auto;color:rgba(255,255,255,.55);font-size:13px">$17.34</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <!-- lead / waiting -->
+        <div style="border-radius:12px;background:linear-gradient(90deg,rgba(255,183,77,.18),rgba(255,255,255,.03));box-shadow:0 0 0 1px rgba(255,183,77,.65) inset,0 0 30px -14px rgba(255,183,77,.6);overflow:hidden">
+          <div style="display:flex;align-items:center;gap:14px;padding:12px 14px">
+            <span style="width:4px;height:30px;border-radius:2px;background:#ffb74d;box-shadow:0 0 8px #ffb74d;flex:none"></span>
+            <div style="width:70px;flex:none"><div style="color:#ffb74d;font-size:12px;font-weight:650">Waiting</div><div class="mono" style="color:#fff;font-size:13px">0:42</div></div>
+            <div style="flex:1;min-width:0"><div style="color:#fff;font-size:14px;font-weight:600">Strada.Brain</div><div class="mono" style="color:rgba(255,255,255,.55);font-size:12px">$ npx prisma migrate deploy</div></div>
+            <div style="display:flex;gap:8px;flex:none">
+              <span style="height:28px;padding:0 12px;border-radius:8px;background:rgba(255,255,255,.08);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center">Deny</span>
+              <span style="height:28px;padding:0 16px;border-radius:8px;background:linear-gradient(180deg,#fff,#e8e8ec);color:#000;font-size:12px;font-weight:700;display:flex;align-items:center">Allow</span>
+            </div>
+          </div>
+        </div>
+        <!-- running rows -->
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04)">
+          <span style="width:4px;height:30px;border-radius:2px;background:#6ea8fe;flex:none"></span>
+          <div style="width:70px;flex:none"><div style="color:#6ea8fe;font-size:12px;font-weight:650">Running</div><div class="mono" style="color:rgba(255,255,255,.6);font-size:13px">0:04</div></div>
+          <div style="flex:1;min-width:0"><div style="color:#fff;font-size:14px;font-weight:600">promptmaster</div><div class="mono" style="color:rgba(255,255,255,.5);font-size:12px">Bash: sed -i '' &hellip;</div></div>
+          <div style="display:flex;align-items:center;gap:2px;flex:none">
+            <span style="width:3px;height:8px;background:rgba(110,168,254,.5);border-radius:1px"></span><span style="width:3px;height:13px;background:rgba(110,168,254,.7);border-radius:1px"></span><span style="width:3px;height:6px;background:rgba(110,168,254,.5);border-radius:1px"></span><span style="width:3px;height:16px;background:#6ea8fe;border-radius:1px"></span><span style="width:3px;height:10px;background:rgba(110,168,254,.7);border-radius:1px"></span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04)">
+          <span style="width:4px;height:30px;border-radius:2px;background:#b39ddb;flex:none"></span>
+          <div style="width:70px;flex:none"><div style="color:#b39ddb;font-size:12px;font-weight:650">Running</div><div class="mono" style="color:rgba(255,255,255,.6);font-size:13px">0:22</div></div>
+          <div style="flex:1;min-width:0"><div style="color:#fff;font-size:14px;font-weight:600">infra-terraform</div><div class="mono" style="color:rgba(255,255,255,.5);font-size:12px">Read: modules/network/main.tf</div></div>
+          <div class="mono" style="color:rgba(255,255,255,.55);font-size:13px;flex:none">$1.09</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04)">
+          <span style="width:4px;height:30px;border-radius:2px;background:#63d089;flex:none"></span>
+          <div style="width:70px;flex:none"><div style="color:#63d089;font-size:12px;font-weight:650">Running</div><div class="mono" style="color:rgba(255,255,255,.6);font-size:13px">0:07</div></div>
+          <div style="flex:1;min-width:0"><div style="color:#fff;font-size:14px;font-weight:600">api-docs</div><div class="mono" style="color:rgba(255,255,255,.5);font-size:12px">Thinking&hellip;</div></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;padding:14px 6px 2px;gap:8px;color:rgba(255,255,255,.4);font-size:12px">
+        <span class="mono" style="font-weight:600;color:rgba(255,255,255,.6)">Today $4,781.88</span>
+        <span>&middot; 16 sessions &middot; 15 answered</span>
+        <span class="mono" style="margin-left:auto">⌥↑↓ select &middot; ⌥↩ allow &middot; ⌥N deny &middot; ⌥P close</span>
+      </div>
+    </div>
+    <figcaption>One request answered at the top, every other session in view underneath &mdash; the real console, drawn live.</figcaption>
     <div class="grid" style="margin-top:36px">
       <div class="card2"><h3>Answer a permission in the row it belongs to</h3><p>A session asking for something tints its row and grows a line with the command, the countdown, and Deny/Allow. Several agents can be asking at once; you see all of them.</p></div>
       <div class="card2"><h3>Drive it without the mouse</h3><p>⌥↑ and ⌥↓ move between rows, ⌥↩ allows or opens a composer, ⌥N denies, ⌥S stops. The keys are printed along the bottom, and change with what the selected row can do.</p></div>
