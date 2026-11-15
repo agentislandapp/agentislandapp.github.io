@@ -34,7 +34,7 @@
   "author": { "@type": "Organization", "name": "Tiki Studios" },
   "offers": [
     { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-    { "@type": "Offer", "name": "Pro — one-time", "price": "49", "priceCurrency": "USD" }
+    { "@type": "Offer", "name": "Pro — one-time", "price": "24.99", "priceCurrency": "USD" }
   ]
 }
 </script>
@@ -292,6 +292,12 @@
   .tier.free li::before { border-color: var(--green); }
   .tier li strong { color: var(--text); font-weight: 600; }
   .tier .btn { margin-top: 20px; width: 100%; justify-content: center; }
+  .tier .price strong { color: var(--text); font-weight: 600; }
+  .tier .plus { margin: 0 0 12px; font-size: 13px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+  .why { margin-top: 28px; }
+  .why h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.01em; }
+  .why ul { margin: 12px 0 0; padding-left: 20px; color: var(--dim); font-size: 14.5px; }
+  .why li { margin-bottom: 6px; } .why li strong { color: var(--text); font-weight: 600; }
 
   .callout { border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 14px; padding: 20px 22px; background: linear-gradient(180deg, rgba(110,168,254,.06), rgba(255,255,255,.02)); }
   .callout strong { color: var(--text); } .callout p { margin: 0; color: var(--dim); font-size: 15px; } .callout .meta { margin-top: 10px; color: var(--faint); font-size: 13.5px; }
@@ -535,18 +541,30 @@
       <div class="tier pro">
         <span class="tag">One-time</span>
         <h3>Pro</h3>
-        <div class="price"><span class="big">$49</span>once &mdash; no subscription, ever</div>
+        <div class="price"><span class="big">$24.99</span>once &mdash; no subscription, ever &middot; <strong>three Macs</strong> on one licence</div>
+        <p class="plus">Everything in Free, plus:</p>
         <ul>
-          <li>Every session <em>in view</em> at once, not one at a time</li>
-          <li>The cockpit (⌥P) &mdash; every session on one screen, answered from the keyboard</li>
-          <li>Usage history and cost per project</li>
-          <li>Voice messages</li>
-          <li>Every supported CLI</li>
+          <li><strong>Every session in view at once</strong> &mdash; Free lists one at a time</li>
+          <li><strong>The cockpit (⌥P)</strong> &mdash; every session on one screen, answered from the keyboard</li>
+          <li><strong>All twelve answerable CLIs</strong> &mdash; Free is Claude Code only</li>
+          <li><strong>Cost per session and per project</strong>, with a history of the week</li>
+          <li>Voice messages to your agents</li>
           <li>A switch to turn the sponsored line off</li>
         </ul>
-        <p class="note" style="margin-top:14px">One licence covers three Macs and can be moved between them.</p>
-        <a class="btn primary" href="https://buy.polar.sh/polar_cl_zCyTuukP3KUsKxvVtbd5gGF0OYiKOyY5764sC3DrdRM">Buy Pro &mdash; $49</a>
+        <p class="note" style="margin-top:14px">One licence covers <strong>three Macs</strong> &mdash; laptop, desktop, work machine &mdash; and can be moved between them.</p>
+        <a class="btn primary" href="https://buy.polar.sh/polar_cl_zCyTuukP3KUsKxvVtbd5gGF0OYiKOyY5764sC3DrdRM">Buy Pro &mdash; $24.99</a>
       </div>
+    </div>
+    <div class="callout why">
+      <h3>Why pay, when other notch apps answer prompts too?</h3>
+      <p>Answering a permission prompt from the notch is usually what you pay for. Here it is the free part, unlimited and not a trial. Pro is for when one agent becomes several, and it adds what a single prompt card can't show you:</p>
+      <ul>
+        <li><strong>The whole fleet on one screen</strong> &mdash; the cockpit sorts whatever is waiting to the top and answers it from the keyboard.</li>
+        <li><strong>What each project actually cost</strong> &mdash; in dollars, per session and per week, as the CLI reports it.</li>
+        <li><strong>Talking back, not just allowing</strong> &mdash; type or dictate a reply to any session without finding its terminal.</li>
+        <li><strong>Twelve CLIs answered in one place</strong> &mdash; Claude Code, Codex, Cursor, Gemini CLI and eight more.</li>
+        <li><strong>Three Macs on one licence</strong>, paid once.</li>
+      </ul>
     </div>
     <p class="note" style="margin-top:20px">Payment is handled by Polar, the merchant of record, in USD with tax included. You get a licence key by email; the same download becomes Pro once you paste the key into Settings &rarr; Licence. If it does not fit the way you work, ask for a refund within 14 days and you'll get one &mdash; you do not have to argue that the app is broken &mdash; write to <a href="mailto:support@tikistudios.io">support@tikistudios.io</a>.</p>
   </div>
@@ -557,12 +575,12 @@
     <span class="eyebrow">The business, in full</span>
     <h2>Where the money comes from.</h2>
     <div class="callout" style="margin-bottom:24px">
-      <p><strong>Free, paid for by one sponsored line. Or $49 once, and never see one.</strong> The free tier is not a trial and does not expire &mdash; it is funded by a single sponsored line that appears only when nothing is running and nothing is waiting on you, at most once every four hours. Pro gives you a switch to turn it off.</p>
+      <p><strong>Free, paid for by one sponsored line. Or $24.99 once, and never see one.</strong> The free tier is not a trial and does not expire &mdash; it is funded by a single sponsored line that appears only when nothing is running and nothing is waiting on you, at most once every four hours. Pro gives you a switch to turn it off.</p>
       <div class="meta">No sponsor runs today. The switch and the machinery exist; it starts once enough people use the app for a sponsor to buy the slot.</div>
     </div>
     <div class="prose">
       <p>Every app this size eventually has to answer this, and a plan you only learn about on the day it ships is not a plan, it is a surprise. So: two lines, and no third one.</p>
-      <p><strong>One payment, or one sponsored line.</strong> Pro is $49 once &mdash; not a subscription, not a renewal. The free tier is paid for the other way: an occasional sponsored line, from a named sponsor who bought the slot directly. That is the whole business. There is nothing to sell about you, because nothing about you leaves the machine.</p>
+      <p><strong>One payment, or one sponsored line.</strong> Pro is $24.99 once &mdash; not a subscription, not a renewal. The free tier is paid for the other way: an occasional sponsored line, from a named sponsor who bought the slot directly. That is the whole business. There is nothing to sell about you, because nothing about you leaves the machine.</p>
       <p><strong>Nothing is running yet.</strong> There is no advertising in AgentIsland today and nothing has been shown to anyone. What exists already is the machinery and the switch. <strong>We are going to run it</strong> once there are enough people using the app for a sponsor's money to be worth asking for.</p>
       <p><strong>And it stays out of the way.</strong> One sponsored line beneath your own sessions. Never over a permission request, never while an agent is working, at most once every four hours, and dismissing one buys a full day of quiet.</p>
     </div>
@@ -589,7 +607,7 @@
     <details class="q"><summary>Can I answer a permission prompt without switching windows?</summary><div class="a">Yes. The card carries the command and Deny/Allow, so you answer from whatever app you are in and the agent carries on. ⌥↩ allows and ⌥N denies from the keyboard, anywhere.</div></details>
     <details class="q"><summary>Does it work on a Mac without a notch?</summary><div class="a">Yes. On a Mac or an external display without a physical notch the app draws its own island in the same place, so it behaves identically.</div></details>
     <details class="q"><summary>Which coding agents does it work with?</summary><div class="a">Twelve of fifteen let you answer the prompt in the island: Claude Code, Codex, Cursor, Gemini CLI, Crush, Qwen Code, Factory Droid, Kimi, Cline, Goose, Amp and OpenCode. Aider and iFlow report status only. DeepSeek can run our hooks through its own Claude Code bridge once you mount it.</div></details>
-    <details class="q"><summary>Is it free?</summary><div class="a">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited, and never rationed by session. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $49 once and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and a switch to turn off the sponsored line.</div></details>
+    <details class="q"><summary>Is it free?</summary><div class="a">The free tier is not a trial. There is no time limit, no card and no account: permission, question and plan cards are unlimited, and never rationed by session. What Free holds back is the <em>overview</em>: the list shows one session at a time. Pro is $24.99 once, works on three Macs, and puts every session in view at once, adds the keyboard cockpit, cost history and the other CLIs, and a switch to turn off the sponsored line.</div></details>
     <details class="q"><summary>Why do my allow rules keep asking anyway?</summary><div class="a">Because an allow rule is a prefix match on the whole command string, so <code>cd frontend &amp;&amp; npm test</code> does not match <code>Bash(npm test:*)</code> &mdash; it starts with <code>cd</code>. <a href="permissions.html">The full explanation is here</a>, including where the rules are actually read from and why bypass mode does not bypass hooks.</div></details>
     <details class="q"><summary>I wrote a Claude Code hook and it does nothing. Why?</summary><div class="a">Start with <code>claude --debug hooks</code>, which shows whether your hook is ever invoked and so splits a config problem from a script problem in one line. <a href="hooks.html">The rest is here</a>: the unquoted path with a space in it, the matcher that misses, and why a hook must fail open rather than exit non-zero.</div></details>
     <details class="q"><summary>Why don't I get notified when Claude Code finishes?</summary><div class="a">Two reasons, usually. Claude Code only fires its notification when it thinks you are <em>away</em> from the terminal; and a desktop notification is sent by default only in Ghostty, Kitty and iTerm2 &mdash; everywhere else you need <code>"preferredNotifChannel": "terminal_bell"</code>. <a href="done.html">The settings, plus the traps</a> &mdash; and why "done" turns out to be three states rather than one.</div></details>
